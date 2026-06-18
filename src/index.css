@@ -1,0 +1,576 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar matching the Void identity */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050407;
+}
+::-webkit-scrollbar-thumb {
+  background: #241820;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C0392B;
+}
+
+/* Base resets & styles */
+html {
+  background-color: #050407;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #050407;
+  color: #EDE8E0;
+  overflow-x: hidden;
+  font-family: 'EB Garamond', serif;
+}
+
+/* Custom Utilities */
+.text-stroke-gold {
+  -webkit-text-stroke: 1px rgba(212, 160, 84, 0.15);
+  color: transparent;
+}
+
+@keyframes flame-breath {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(192, 57, 43, 0.35));
+    opacity: 0.11;
+  }
+  50% {
+    filter: drop-shadow(0 0 35px rgba(229, 57, 53, 0.55));
+    opacity: 0.15;
+  }
+}
+
+.ghost-text-demon-slayer {
+  color: transparent;
+  background-image: linear-gradient(180deg, #E53935 0%, #C0392B 65%, transparent 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-stroke: 1.5px rgba(240, 192, 112, 0.28);
+  animation: flame-breath 6s ease-in-out infinite;
+}
+
+/* CSS Scene Gradients & Overlays */
+
+/* 1. Stone Breathing (Throwball) */
+.card-stone {
+  background: 
+    radial-gradient(ellipse at 50% 110%, #3A2510 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 80%, #1A1008 0%, transparent 40%),
+    linear-gradient(180deg, #0D0A08 0%, #160E0A 100%);
+}
+.card-stone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 2px,
+    #D4A054 2px, #D4A054 4px
+  );
+  pointer-events: none;
+}
+
+/* 2. Wind Breathing (Volleyball) */
+.card-wind {
+  background: 
+    radial-gradient(ellipse at 50% 0%, #1A2A1A 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, #0A1A0A 0%, transparent 40%),
+    linear-gradient(180deg, #080C08 0%, #0D1210 100%);
+}
+.card-wind::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background: repeating-linear-gradient(
+    180deg, transparent, transparent 8px,
+    #B4DCA0 8px, #B4DCA0 9px
+  );
+  pointer-events: none;
+}
+
+/* 3. Shadow Breathing (Carrom) */
+.card-shadow {
+  background: 
+    radial-gradient(circle at 50% 60%, #1A1520 0%, transparent 50%),
+    radial-gradient(circle at 50% 60%, #2A1035 0%, #050407 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(139, 94, 26, 0.14) 0%, transparent 40%);
+}
+
+/* 4. Thunder Breathing (Table Tennis) */
+.card-thunder {
+  background: 
+    radial-gradient(ellipse at 50% 20%, #2A2A08 0%, transparent 45%),
+    radial-gradient(ellipse at 30% 70%, #1A1A05 0%, transparent 35%),
+    linear-gradient(180deg, #0A0A06 0%, #12100A 100%);
+}
+/* Lightning crack SVG background */
+.card-thunder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M70,0 L30,40 L60,45 L20,100 L40,60 L25,55 Z' fill='none' stroke='%23F0C070' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
+/* 5. Iron Breathing (Powerlifting) */
+.card-iron {
+  background: 
+    radial-gradient(ellipse at 50% 100%, #3A1A08 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(139, 58, 10, 0.1) 0%, transparent 30%),
+    linear-gradient(180deg, #0A0806 0%, #1A0E08 100%);
+}
+.card-iron::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background: repeating-linear-gradient(
+    90deg, transparent, transparent 14px,
+    #8B5E1A 14px, #8B5E1A 16px
+  );
+  pointer-events: none;
+}
+
+/* 6. Earth Breathing (Squats Challenge) */
+.card-earth {
+  background: 
+    radial-gradient(ellipse at 50% 100%, #2A1A08 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 30%, #1A1008 0%, transparent 30%),
+    linear-gradient(180deg, #0A0806 0%, #14100A 100%);
+}
+/* Subtle pillar silhouettes */
+.card-earth::before, .card-earth::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(30, 20, 10, 0.6);
+  pointer-events: none;
+}
+.card-earth::before { left: 15%; }
+.card-earth::after { right: 15%; }
+
+/* 7. District of Elegance (Fashion Show) */
+.card-elegance {
+  background: 
+    radial-gradient(ellipse at 50% 100%, #3A0A10 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 0%, #1A0508 0%, transparent 40%),
+    linear-gradient(160deg, #0D0608 0%, #1A0810 50%, #0D0608 100%);
+}
+/* Runway suggestion center line */
+.card-elegance::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, rgba(212, 160, 84, 0.08) 40%, rgba(212, 160, 84, 0.08) 60%, transparent 100%);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* 8. Moonlight Courtyard (Duet Dance) */
+.card-moonlight {
+  background: 
+    radial-gradient(circle at 50% 20%, #2A2040 0%, transparent 45%),
+    radial-gradient(circle at 50% 18%, #1A1530 0%, transparent 30%),
+    linear-gradient(180deg, #080610 0%, #0D0A18 100%);
+}
+.card-moonlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 5%, rgba(220, 210, 255, 0.08) 0%, transparent 35%);
+  pointer-events: none;
+}
+
+/* 9. Performance Plaza (Group Dance) */
+.card-plaza {
+  background: 
+    radial-gradient(ellipse at 50% 100%, #3A1010 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 70%, rgba(139, 26, 26, 0.08) 0%, transparent 35%),
+    linear-gradient(180deg, #0A0606 0%, #160A0A 100%);
+}
+/* Stage light cone from top center */
+.card-plaza::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 150px;
+  height: 200px;
+  background: conic-gradient(from 155deg at 50% 0%, transparent 0deg, rgba(212, 160, 84, 0.04) 20deg, rgba(212, 160, 84, 0.04) 30deg, transparent 50deg);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* 10. The Hidden Path (Treasure Hunt) */
+.card-path {
+  background: 
+    radial-gradient(ellipse at 50% 100%, #1A2A10 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 50%, #0A1A08 0%, transparent 30%),
+    linear-gradient(180deg, #060A06 0%, #0D1208 100%);
+}
+/* Subtle diagonal path streak and forest triangle shapes */
+.card-path::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(212, 160, 84, 0.02) 48%, rgba(212, 160, 84, 0.02) 52%, transparent 60%);
+  pointer-events: none;
+}
+
+/* 11. Chronicles Studio (Short Film) */
+.card-studio {
+  background: 
+    radial-gradient(circle at 30% 40%, #2A1A08 0%, transparent 40%),
+    radial-gradient(circle at 70% 60%, #1A1008 0%, transparent 30%),
+    linear-gradient(180deg, #080604 0%, #120E08 100%);
+}
+/* Spotlight cone off-center + film strip bottom decoration */
+.card-studio::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 25%;
+  width: 120px;
+  height: 200px;
+  background: conic-gradient(from 160deg at 50% 0%, transparent 0deg, rgba(212, 160, 84, 0.05) 15deg, rgba(212, 160, 84, 0.05) 25deg, transparent 40deg);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.card-studio::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12%;
+  opacity: 0.03;
+  background: repeating-linear-gradient(
+    90deg, #D4A054 0px, #D4A054 3px,
+    transparent 3px, transparent 20px
+  );
+  pointer-events: none;
+}
+
+/* 12. The Gaming Realm (BGMI Online) */
+.card-gaming {
+  background: 
+    radial-gradient(ellipse at 50% 50%, #0A1A2A 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, #0A0A1A 0%, transparent 40%),
+    linear-gradient(180deg, #050508 0%, #0A0C14 100%);
+}
+.card-gaming::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.02;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 20px, #6496FF 20px, #6496FF 21px),
+    repeating-linear-gradient(90deg, transparent, transparent 20px, #6496FF 20px, #6496FF 21px);
+  pointer-events: none;
+}
+
+/* 13. The Council Chamber (Business Quiz) */
+.card-council {
+  background: 
+    radial-gradient(circle at 50% 60%, #2A1A08 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, #3A2208 0%, transparent 40%),
+    linear-gradient(180deg, #0A0806 0%, #16100A 100%);
+}
+/* Round table suggestion and 3 candle glow spots */
+.card-council::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 50% 120%, rgba(212, 160, 84, 0.06) 0%, transparent 30%),
+    radial-gradient(circle 20px at 25% 70%, rgba(240, 192, 112, 0.06), transparent),
+    radial-gradient(circle 20px at 50% 70%, rgba(240, 192, 112, 0.06), transparent),
+    radial-gradient(circle 20px at 75% 70%, rgba(240, 192, 112, 0.06), transparent);
+  pointer-events: none;
+}
+
+/* 14. The Market Quarter (Ads Creation) */
+.card-market {
+  background: 
+    radial-gradient(ellipse at 50% 80%, #2A1808 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 50%, #1A1008 0%, transparent 30%),
+    linear-gradient(180deg, #0A0806 0%, #160E08 100%);
+}
+/* Banner silhouettes & lantern glows */
+.card-market::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle 15px at 15% 80%, rgba(212, 160, 84, 0.07), transparent),
+    radial-gradient(circle 15px at 35% 80%, rgba(212, 160, 84, 0.07), transparent),
+    radial-gradient(circle 15px at 65% 80%, rgba(212, 160, 84, 0.07), transparent),
+    radial-gradient(circle 15px at 85% 80%, rgba(212, 160, 84, 0.07), transparent);
+  pointer-events: none;
+}
+.card-market::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 40px;
+  background: #0D0810;
+  left: 10%;
+  box-shadow: 70px 0 0 #0D0810; /* Hanging banner silhouettes */
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* 15. The Dojo of Words (Mock Interview) */
+.card-dojo {
+  background: 
+    radial-gradient(ellipse at 50% 0%, #2A1A08 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 30%, #1A1008 0%, transparent 35%),
+    linear-gradient(180deg, #0A0806 0%, #14100A 100%);
+}
+/* Dojo spotlight & wood paneling */
+.card-dojo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 140px;
+  height: 240px;
+  background: conic-gradient(from 160deg at 50% 0%, transparent 0deg, rgba(212, 160, 84, 0.07) 15deg, rgba(212, 160, 84, 0.07) 25deg, transparent 40deg);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.card-dojo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.015;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 10px,
+    #EDE8E0 10px, #EDE8E0 11px
+  );
+  pointer-events: none;
+}
+
+/* 16. The Treasury Vault (Finance Quantum) */
+.card-vault {
+  background: 
+    radial-gradient(circle at 50% 50%, #1A1508 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 100%, #2A2008 0%, transparent 40%),
+    linear-gradient(180deg, #0A0A06 0%, #141208 100%);
+}
+/* Concentric vault door circles & coin glow */
+.card-vault::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  border: 1px solid rgba(212, 160, 84, 0.05);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.card-vault::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  border: 1px solid rgba(212, 160, 84, 0.05);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at bottom right, rgba(212, 160, 84, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* 17. The Innovation Quarter (Startup Stall) */
+.card-innovation {
+  background: 
+    radial-gradient(ellipse at 50% 80%, #1A1808 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, #101408 0%, transparent 35%),
+    linear-gradient(180deg, #080A06 0%, #101208 100%);
+}
+/* Grid overlay & Pagoda silhouette */
+.card-innovation::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.015;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 18px, #D4A054 18px, #D4A054 19px),
+    repeating-linear-gradient(90deg, transparent, transparent 18px, #D4A054 18px, #D4A054 19px);
+  pointer-events: none;
+}
+/* Pagoda silhouette shape */
+.card-innovation::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 60px;
+  height: 25px;
+  background: #050407;
+  clip-path: polygon(50% 0%, 20% 30%, 80% 30%, 10% 70%, 90% 70%, 0% 100%, 100% 100%);
+  transform: translateX(-50%);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Placeholders (1, 2, 3) defaults to card-stone styles */
+.card-placeholder-1,
+.card-placeholder-2,
+.card-placeholder-3 {
+  background: 
+    radial-gradient(ellipse at 50% 110%, #3A2510 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 80%, #1A1008 0%, transparent 40%),
+    linear-gradient(180deg, #0D0A08 0%, #160E0A 100%);
+}
+.card-placeholder-1::before,
+.card-placeholder-2::before,
+.card-placeholder-3::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 2px,
+    #D4A054 2px, #D4A054 4px
+  );
+  pointer-events: none;
+}
+
+/* Navbar Logo Split Chromatic Treatment */
+.navbar-logo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+}
+
+@keyframes aura-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 12px rgba(212, 160, 84, 0.4)) drop-shadow(0 0 24px rgba(192, 57, 43, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(212, 160, 84, 0.7)) drop-shadow(0 0 40px rgba(192, 57, 43, 0.5));
+  }
+}
+
+.navbar-logo:hover {
+  transform: scale(1.04);
+  animation: aura-pulse 1.5s ease-in-out infinite;
+}
+
+.navbar-logo-underline {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, #C0392B, #D4A054, #C0392B);
+  opacity: 0.6;
+  margin-top: 2px;
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+  transform-origin: left center;
+}
+
+.navbar-logo:hover .navbar-logo-underline {
+  transform: scaleX(1);
+}
+
+/* --- Premium Fire Gradient for Text (Hinokami Flow) --- */
+.text-premium-fire {
+  background: linear-gradient(
+    to right,
+    #D4A054 0%,    /* Gold / Craft */
+    #FF6B6B 25%,   /* Bright Fire */
+    #C0392B 50%,   /* Deep Power / Blood */
+    #8B5E1A 75%,   /* Earth / Legacy */
+    #D4A054 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: fire-flow 5s linear infinite;
+}
+
+@keyframes fire-flow {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* --- Nichirin Blade Hover Strike for Nav Links --- */
+.nav-link-blade {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 4px; /* Space for the blade */
+}
+
+.nav-link-blade::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  /* A sharp, glowing blade edge slashing across */
+  background: linear-gradient(90deg, transparent, #FFD700, #C0392B, transparent);
+  box-shadow: 0 0 8px rgba(192, 57, 43, 0.8);
+  transition: left 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.nav-link-blade:hover::before {
+  left: 100%;
+  transition: left 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.nav-link-blade:hover {
+  color: #D4A054;
+  text-shadow: 0 0 15px rgba(212, 160, 84, 0.3);
+}
+
+/* --- Mobile Menu Ambient Fire Glow --- */
+@keyframes breathing-glow {
+  0%, 100% {
+    box-shadow: inset 0 0 60px rgba(192, 57, 43, 0.15), inset 0 0 20px rgba(212, 160, 84, 0.05);
+    background-color: rgba(5, 4, 7, 0.98);
+  }
+  50% {
+    box-shadow: inset 0 0 140px rgba(229, 57, 53, 0.35), inset 0 0 50px rgba(212, 160, 84, 0.15);
+    background-color: rgba(15, 6, 8, 0.96);
+  }
+}
+
+.mobile-menu-fire-glow {
+  animation: breathing-glow 4s ease-in-out infinite;
+  backdrop-filter: blur(12px); /* Premium frosted glass effect over the site */
+}
+
+/* Enhancing the mobile links to match the blade aesthetic */
+.mobile-nav-link:hover {
+  color: transparent;
+  background: linear-gradient(90deg, #FFD700, #C0392B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(229, 57, 53, 0.4);
+}
