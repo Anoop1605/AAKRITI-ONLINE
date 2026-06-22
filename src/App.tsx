@@ -7,6 +7,7 @@ import { Navbar } from './components/Navbar';
 import { HomePage } from './pages/HomePage';
 import { EventDetailPage } from './pages/EventDetailPage';
 import { RegistrationModal } from './components/RegistrationModal';
+import { Analytics } from '@vercel/analytics/react';
 
 function AppContent() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function App() {
   return (
     <Router>
       <AppContent />
+      <Analytics />
     </Router>
   );
 }
