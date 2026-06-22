@@ -49,10 +49,14 @@ export const EventGrid: React.FC<EventGridProps> = ({ title, events, id }) => {
   return (
     <section id={id} ref={sectionRef} className="w-full py-24 px-4 bg-void relative z-10">
       <div className="max-w-7xl mx-auto">
-        <h2 className="font-display font-bold text-gold text-[clamp(28px,6vw,48px)] text-center mb-16 tracking-wider flex justify-center flex-wrap">
-          {title.split('').map((char, i) => (
-            <span key={i} className="grid-title-char inline-block opacity-0">
-              {char === ' ' ? '\u00A0' : char}
+        <h2 className="font-display font-bold text-gold text-[clamp(24px,5vw,48px)] text-center mb-16 tracking-wider flex justify-center flex-wrap gap-x-[0.3em] gap-y-2">
+          {title.split(' ').map((word, wordIdx) => (
+            <span key={wordIdx} className="inline-block whitespace-nowrap">
+              {word.split('').map((char, charIdx) => (
+                <span key={charIdx} className="grid-title-char inline-block opacity-0">
+                  {char}
+                </span>
+              ))}
             </span>
           ))}
         </h2>

@@ -26,14 +26,17 @@ export function useDistrictEntranceAnimation(
     // Apply will-change for performance
     const leftBar = container.querySelector('.detail-left-bar') as HTMLElement;
     const bg = container.querySelector('.detail-bg') as HTMLElement;
+    const logistics = container.querySelector('.detail-logistics') as HTMLElement;
     if (leftBar) leftBar.style.willChange = 'opacity, transform';
     if (bg) bg.style.willChange = 'transform, opacity, filter';
+    if (logistics) logistics.style.willChange = 'opacity, transform';
 
     const master = gsap.timeline({
       onComplete: () => {
         // Will-change cleanup after Phase C begins / entrance finishes
         if (leftBar) leftBar.style.willChange = 'auto';
         if (bg) bg.style.willChange = 'auto';
+        if (logistics) logistics.style.willChange = 'auto';
         
         ScrollTrigger.refresh();
       }
@@ -77,10 +80,15 @@ export function useDistrictEntranceAnimation(
       { opacity: 1, duration: 0.5, ease: 'power2.out' },
       1.45
     );
+    master.fromTo(logistics,
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+      1.55
+    );
     master.fromTo(ctaBtn,
       { opacity: 0, y: 12 },
       { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' },
-      1.6
+      1.7
     );
 
     // ── PHASE C: Idle loop (shared, repeats indefinitely) ──

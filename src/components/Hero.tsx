@@ -59,13 +59,13 @@ export const Hero: React.FC = () => {
         className="absolute inset-[-20%] z-0 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22 opacity=%220.6%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] scale-110" 
       />
       
-      {/* Layer 3: Ghost Text */}
+      {/* Layer 3: Ghost Text Split */}
       <div 
         ref={ghostTextRef}
-        className="hero-ghost-text absolute top-[22%] md:top-[18%] w-full text-center font-display font-black text-[clamp(40px,11vw,170px)] select-none pointer-events-none leading-none tracking-[0.12em] z-0 text-[#6B1A1A] opacity-0"
-        style={{ WebkitTextStroke: '1.5px rgba(240, 192, 112, 0.28)' }}
+        className="hero-ghost-text absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center font-display font-black text-[clamp(40px,11vw,170px)] select-none pointer-events-none leading-none tracking-[0.12em] z-0 opacity-0 flex justify-center items-center flex-nowrap whitespace-nowrap gap-1"
       >
-        AAKRITI
+        <span className="ghost-text-red-black">AA</span>
+        <span className="ghost-split-gold-black">KRITI</span>
       </div>
 
       {/* Layer 5: Content */}
@@ -80,15 +80,13 @@ export const Hero: React.FC = () => {
         <div className="flex flex-col items-center justify-center space-y-1 mb-8 relative">
           <h1 
             ref={el => { if(el) linesRef.current[0] = el; }} 
-            className="hero-line font-display font-black text-gold-fire text-[clamp(48px,12vw,110px)] leading-[1.1] tracking-wider opacity-0"
-            style={{ clipPath: 'inset(100% 0% 0% 0%)' }}
+            className="hero-line hero-aakriti-animate font-display font-black text-[clamp(48px,12vw,110px)] leading-[1.1] tracking-wider opacity-0"
           >
             AAKRITI
           </h1>
           <h2 
             ref={el => { if(el) linesRef.current[1] = el; }} 
             className="hero-line font-heading font-normal text-text-body text-[clamp(24px,5vw,40px)] tracking-[0.3em] opacity-0"
-            style={{ clipPath: 'inset(100% 0% 0% 0%)' }}
           >
             2026
           </h2>

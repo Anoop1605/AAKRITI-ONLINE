@@ -32,12 +32,15 @@ export const EventDetailPage: React.FC = () => {
   }
 
   const handleRegister = () => {
-    // 1. Reset and pre-select the current event id
-    useRegistrationStore.setState({ selectedEvents: [event.id] });
-    // 2. Open the registration modal
+    // 1. Reset and pre-select the current event id, flag direct registration
+    useRegistrationStore.setState({ 
+      selectedEvents: [event.id],
+      isDirectRegistration: true
+    });
+    // 2. Start at Step 1
+    setStep(1);
+    // 3. Open the registration modal
     openModal();
-    // 3. Skip to Step 2
-    setStep(2);
   };
 
   const getCategoryColor = () => {
@@ -275,10 +278,9 @@ export const EventDetailPage: React.FC = () => {
           </span>
         </div>
 
-        {/* Event Name */}
+        {/* Event Name - Removed inline clipPath to prevent it getting stuck hidden */}
         <h1 
           className="detail-event-name opacity-0 font-display font-black text-[clamp(36px,10vw,72px)] uppercase tracking-wider text-text-primary leading-none text-center md:text-left mb-4"
-          style={{ clipPath: 'inset(100% 0% 0% 0%)' }}
         >
           {event.name}
         </h1>
@@ -305,9 +307,36 @@ export const EventDetailPage: React.FC = () => {
         </div>
 
         {/* Description */}
-        <p className="detail-description opacity-0 font-body text-text-body text-base md:text-lg leading-relaxed text-center md:text-left mb-12 max-w-xl">
+        <p className="detail-description opacity-0 font-body text-text-body text-base md:text-lg leading-relaxed text-center md:text-left mb-8 max-w-xl">
           {event.description}
         </p>
+
+        {/* Logistics & Rules Panel */}
+        <div className="detail-logistics opacity-0 w-full max-w-xl bg-stone-mid/20 border border-gold/10 p-6 rounded-[2px] mb-12">
+          <div className="grid grid-cols-2 gap-6 mb-6">
+            <div>
+              <span className="font-heading text-gold text-xs tracking-widest block mb-1">VENUE</span>
+              <span className="font-body text-text-primary text-sm">{event.venue}</span>
+            </div>
+            <div>
+              <span className="font-heading text-gold text-xs tracking-widest block mb-1">TIME</span>
+              <span className="font-body text-text-primary text-sm">{event.time}</span>
+            </div>
+            <div className="col-span-2">
+              <span className="font-heading text-gold text-xs tracking-widest block mb-1">REGISTRATION FEE</span>
+              <span className="font-body text-crimson text-sm font-semibold">{event.fee}</span>
+            </div>
+          </div>
+          
+          <div>
+            <span className="font-heading text-gold text-xs tracking-widest block mb-2">DISTRICT RULES</span>
+            <ul className="list-disc list-inside font-body text-text-ghost text-sm space-y-1">
+              {event.rules.map((rule, idx) => (
+                <li key={idx}>{rule}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
         {/* Spacer line */}
         <div className="flex items-center justify-center md:justify-start gap-4 opacity-30 mb-10">

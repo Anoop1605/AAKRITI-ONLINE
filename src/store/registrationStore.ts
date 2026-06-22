@@ -11,6 +11,7 @@ interface RegistrationState {
     college: string;
     year: string;
   };
+  isDirectRegistration: boolean; // Flags direct register clicked from detail page
   openModal: () => void;
   closeModal: () => void;
   setStep: (step: number) => void;
@@ -24,7 +25,7 @@ const initialUserDetails = {
   email: '',
   phone: '',
   college: '',
-  year: '1st',
+  year: '1st' as const,
 };
 
 export const useRegistrationStore = create<RegistrationState>((set) => ({
@@ -32,6 +33,7 @@ export const useRegistrationStore = create<RegistrationState>((set) => ({
   step: 1,
   selectedEvents: [],
   userDetails: initialUserDetails,
+  isDirectRegistration: false,
 
   openModal: () => set({ isOpen: true }),
   closeModal: () => set({ isOpen: false }),
@@ -54,6 +56,7 @@ export const useRegistrationStore = create<RegistrationState>((set) => ({
     isOpen: false,
     step: 1,
     selectedEvents: [],
-    userDetails: initialUserDetails
+    userDetails: initialUserDetails,
+    isDirectRegistration: false,
   })
 }));

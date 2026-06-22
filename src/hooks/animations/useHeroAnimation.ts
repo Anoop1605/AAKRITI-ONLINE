@@ -30,15 +30,14 @@ export function useHeroAnimation(refs: HeroRefs) {
     const fadeDuration = 1.0;
     const fullyDisappeared = fadeOutStart + fadeDuration;
 
-    // Fix 2: Ghost text starts fading at 60% of intro fade-out
+    // 1. Ghost text waits completely for intro to finish before appearing
     if (ghostText) {
       gsap.fromTo(ghostText,
         { opacity: 0 },
-        { opacity: 0.12, duration: 1.2, ease: 'power2.out', delay: fadeOutStart + (fadeDuration * 0.6) }
+        { opacity: 0.4, duration: 1.5, ease: 'power2.out', delay: fullyDisappeared + 0.5 }
       );
     }
 
-    // Fix 4: Staggered entrance after fully disappeared
     if (eyebrow) {
       gsap.fromTo(eyebrow, 
         { opacity: 0, y: 20 }, 
@@ -47,6 +46,7 @@ export function useHeroAnimation(refs: HeroRefs) {
     }
 
     if (heroLines.length > 0) {
+      // 2. The Outline drops in first
       gsap.fromTo(heroLines,
         { clipPath: 'inset(100% 0% 0% 0%)', y: 15 },
         { 
@@ -58,6 +58,16 @@ export function useHeroAnimation(refs: HeroRefs) {
           delay: fullyDisappeared + 0.1
         }
       );
+
+      // 3. The Red/Gold Gradient fills in from left to right
+      if (heroLines[0]) {
+        gsap.to(heroLines[0], {
+          backgroundSize: '100% 100%',
+          duration: 1.8,
+          ease: 'power2.inOut',
+          delay: fullyDisappeared + 1.0 // Starts right after outline settles
+        });
+      }
     }
 
     if (tagline) {

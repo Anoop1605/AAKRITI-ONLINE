@@ -58,60 +58,50 @@ export const Navbar: React.FC = () => {
   return (
     <>
       <nav ref={navbarRef} className="fixed top-0 left-0 right-0 z-[100] px-6 py-4 flex items-center justify-between transition-colors">
-        <Link to="/" className="navbar-logo">
-          <svg width="160" height="36" viewBox="0 0 160 36" fill="none"
-            xmlns="http://www.w3.org/2000/svg" aria-label="AAKRITI">
-            <defs>
-              {/* Shimmer Animation for "KRITI" */}
-              <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#8B5E1A" />
-                <stop offset="50%" stopColor="#FFD700">
-                  <animate attributeName="offset" values="0%;100%;0%" dur="4s" repeatCount="indefinite" />
-                </stop>
-                <stop offset="100%" stopColor="#8B5E1A" />
-              </linearGradient>
+        {/* Logo Container */}
+        <div className="w-[160px]">
+          <Link to="/" className="block pointer-events-auto transition-opacity hover:opacity-80">
+            <svg width="160" height="36" viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AAKRITI">
+              <defs>
+                <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#D4A054" />
+                  <stop offset="100%" stopColor="#F0C070" />
+                </linearGradient>
+                <linearGradient id="crimson-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#C0392B" />
+                  <stop offset="100%" stopColor="#6B1A1A" />
+                </linearGradient>
+                <filter id="logo-glow">
+                  <feGaussianBlur stdDeviation="1.5" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
 
-              {/* Fire Animation for "AA" */}
-              <linearGradient id="crimson-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#FF6B6B">
-                  <animate attributeName="stopColor" values="#FF6B6B;#C0392B;#FF6B6B" dur="3s" repeatCount="indefinite" />
-                </stop>
-                <stop offset="50%" stopColor="#C0392B">
-                  <animate attributeName="stopColor" values="#C0392B;#8B1A1A;#C0392B" dur="3s" repeatCount="indefinite" />
-                </stop>
-                <stop offset="100%" stopColor="#8B1A1A" />
-              </linearGradient>
-              <filter id="logo-glow">
-                <feGaussianBlur stdDeviation="1.5" result="blur"/>
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
+              {/* "AA" in crimson — fire identity */}
+              <text
+                x="7" y="28"
+                fontFamily="'Cinzel Decorative', serif"
+                fontWeight="900"
+                fontSize="26"
+                fill="url(#crimson-grad)"
+                filter="url(#logo-glow)"
+              >AA</text>
 
-            {/* "AA" in crimson — fire identity */}
-            <text
-              x="7" y="28"
-              fontFamily="'Cinzel Decorative', serif"
-              fontWeight="900"
-              fontSize="26"
-              fill="url(#crimson-grad)"
-              filter="url(#logo-glow)"
-            >AA</text>
-
-            {/* "KRITI" in gold — craft identity */}
-            <text
-              x="46" y="28"
-              fontFamily="'Cinzel Decorative', serif"
-              fontWeight="900"
-              fontSize="26"
-              fill="url(#gold-grad)"
-              filter="url(#logo-glow)"
-            >KRITI</text>
-          </svg>
-          <div className="navbar-logo-underline" />
-        </Link>
+              {/* "KRITI" in gold — craft identity */}
+              <text
+                x="46" y="28"
+                fontFamily="'Cinzel Decorative', serif"
+                fontWeight="900"
+                fontSize="26"
+                fill="url(#gold-grad)"
+                filter="url(#logo-glow)"
+              >KRITI</text>
+            </svg>
+          </Link>
+        </div>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">

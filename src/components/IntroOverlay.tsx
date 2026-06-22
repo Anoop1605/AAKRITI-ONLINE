@@ -34,11 +34,18 @@ export const IntroOverlay: React.FC = () => {
 
     let W = 0, H = 0;
     let animId: number;
+    let isFinished = false;
 
     function resize() {
       W = window.innerWidth;
       H = window.innerHeight;
-      toriiCanvas!.width = W; toriiCanvas!.height = H;
+      if (toriiCanvas) {
+        toriiCanvas.width = W; 
+        toriiCanvas.height = H;
+        if (isFinished) {
+          drawTorii(1, 0.5); // Redraw final state if resized after intro
+        }
+      }
     }
     resize();
     window.addEventListener('resize', resize);
@@ -51,10 +58,22 @@ export const IntroOverlay: React.FC = () => {
 
     // Torii Gate Draw
     function drawTorii(progress: number, glowAlpha: number) {
-      tCtx!.clearRect(0, 0, W, H);
+      // Get exact canvas dimensions
+      const W = toriiCanvas!.width;
+      const H = toriiCanvas!.height;
+
+      // Safe Dynamic Scaling for the Gate
+      // Mobile: Takes up 85% of screen width. Desktop: Caps at 600px wide.
+      const gateW = Math.min(W * 0.85, 600); 
+      
+      // Mobile: Takes up 75% of screen height. Desktop: Caps at 650px tall.
+      const gateH = Math.min(H * 0.75, 650);
+
+      // Ensure context exists and dimensions are valid before drawing
+      if (!tCtx || gateW <= 0 || gateH <= 0) return;
+
+      tCtx.clearRect(0, 0, W, H);
       const cx = W / 2, cy = H / 2;
-      const gateW = Math.min(W * 0.55, 320);
-      const gateH = Math.min(H * 0.65, 340);
       const postH = gateH * 0.85;
       const postW = 5;
       const legH = gateH * 0.12;
@@ -241,6 +260,7 @@ export const IntroOverlay: React.FC = () => {
       if (t < 1) {
         animId = requestAnimationFrame(frame);
       } else {
+        isFinished = true;
         setDone(true);
         if (root) {
           root.style.transition = 'opacity 1s ease-in-out';
@@ -275,12 +295,12 @@ export const IntroOverlay: React.FC = () => {
           </div>
           <div className="relative flex items-center gap-0">
             <div ref={slashLRef} className="h-px bg-gradient-to-r from-transparent via-[#D4A054] to-transparent mx-4 opacity-0 self-center shrink-0 transition-none" />
-            <div>
+            <div className="flex flex-nowrap whitespace-nowrap">
               {"AAKRITI".split('').map((char, i) => (
                 <span 
                   key={i} 
                   ref={el => { logoCharsRef.current[i] = el; }} 
-                  className="font-display font-black text-[clamp(52px,11vw,90px)] text-[#FFD700] drop-shadow-[0_0_60px_rgba(255,215,0,0.15)] opacity-0 inline-block leading-none"
+                  className="font-display font-black text-[clamp(38px,9vw,90px)] text-[#FFD700] drop-shadow-[0_0_60px_rgba(255,215,0,0.15)] opacity-0 inline-block leading-none"
                   style={{ transform: 'translateY(30px) scaleY(0.7)' }}
                 >
                   {char}

@@ -14,12 +14,13 @@ const registrationSchema = z.object({
   college: z.string().min(3, 'College name required'),
   year: z.enum(['1st', '2nd', 'Final', 'Other']),
   selectedEvents: z.array(z.string()).min(1, 'Choose at least one event'),
+  transactionId: z.string().min(6, 'Enter a valid Transaction ID / UTR number (at least 6 characters)'),
 });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
 export const RegistrationModal: React.FC = () => {
-  const { isOpen, step, setStep, closeModal, reset, selectedEvents, toggleEvent } = useRegistrationStore();
+  const { isOpen, step, setStep, closeModal, reset, selectedEvents, toggleEvent, isDirectRegistration } = useRegistrationStore();
   const modalRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -27,7 +28,8 @@ export const RegistrationModal: React.FC = () => {
     resolver: zodResolver(registrationSchema),
     defaultValues: {
       year: '1st',
-      selectedEvents: []
+      selectedEvents: [],
+      transactionId: ''
     }
   });
 
@@ -57,32 +59,45 @@ export const RegistrationModal: React.FC = () => {
 
     if (isValid) {
       const container = containerRef.current;
+      
+      // LOGIC UPDATE: Skip Step 2 if direct registration
+      let nextStep = currentStep + 1;
+      if (currentStep === 1 && isDirectRegistration) {
+        nextStep = 3;
+      }
+
       if (container) {
         gsap.to(container, { x: '-20px', opacity: 0, duration: 0.2, ease: 'power2.in', onComplete: () => {
-          setStep(currentStep + 1);
+          setStep(nextStep);
           gsap.fromTo(container, { x: '20px', opacity: 0 }, { x: '0px', opacity: 1, duration: 0.3, ease: 'power3.out' });
         }});
       } else {
-        setStep(currentStep + 1);
+        setStep(nextStep);
       }
     }
   };
 
   const handleBack = (currentStep: number) => {
     const container = containerRef.current;
+    
+    // LOGIC UPDATE: Skip Step 2 going backward if direct registration
+    let prevStep = currentStep - 1;
+    if (currentStep === 3 && isDirectRegistration) {
+      prevStep = 1;
+    }
+
     if (container) {
       gsap.to(container, { x: '20px', opacity: 0, duration: 0.2, ease: 'power2.in', onComplete: () => {
-        setStep(currentStep - 1);
+        setStep(prevStep);
         gsap.fromTo(container, { x: '-20px', opacity: 0 }, { x: '0px', opacity: 1, duration: 0.3, ease: 'power3.out' });
       }});
     } else {
-      setStep(currentStep - 1);
+      setStep(prevStep);
     }
   };
 
   const onSubmit = (data: RegistrationFormData) => {
     console.log('Registration Submitted:', data);
-    // Success animation and reset
     reset();
     alert("Registration successful! The Castle awaits your arrival.");
   };
@@ -193,18 +208,31 @@ export const RegistrationModal: React.FC = () => {
               </div>
             )}
 
-            {/* STEP 3: CONFIRMATION */}
+            {/* STEP 3: CONFIRMATION & PAYMENT */}
             {step === 3 && (
-              <div className="text-center py-8">
-                <h3 className="font-display text-2xl text-gold mb-2">Review Your Oath</h3>
-                <p className="font-body text-text-body mb-6">You are claiming {selectedEvents.length} district{selectedEvents.length > 1 ? 's' : ''}. Proceed to ignite your entry.</p>
-                <div className="w-full bg-void border border-stone-mid p-4 rounded-[2px] text-left max-h-[30vh] overflow-y-auto">
-                  <ul className="space-y-2">
-                    {selectedEvents.map(id => {
-                      const evt = events.find(e => e.id === id);
-                      return <li key={id} className="text-sm font-heading text-text-primary border-b border-stone-mid pb-2">{evt?.name} <span className="text-text-ghost text-xs ml-2">({evt?.districtName})</span></li>;
-                    })}
-                  </ul>
+              <div className="text-center py-4">
+                <h3 className="font-display text-2xl text-gold mb-2">Seal Your Entry</h3>
+                <p className="font-body text-text-body mb-6 text-sm">Scan the sigil below to pay the registration fee.</p>
+                
+                <div className="flex flex-col items-center mb-6">
+                  {/* --- QR CODE PLACEHOLDER --- */}
+                  <div className="w-48 h-48 border-2 border-dashed border-gold/40 rounded-[2px] p-2 flex items-center justify-center bg-stone-mid/20">
+                    <span className="font-body text-text-ghost text-xs text-center tracking-widest">
+                      QR CODE<br/>PLACEHOLDER
+                    </span>
+                  </div>
+                  <span className="font-mono text-gold mt-2 text-xs">UPI: aakriti2026@bank</span>
+                </div>
+
+                <div className="w-full text-left mb-6">
+                  <label className="block font-body text-text-ghost text-sm mb-1">Transaction ID / UTR Number *</label>
+                  <input 
+                    type="text" 
+                    {...register('transactionId')}
+                    className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors uppercase" 
+                    placeholder="e.g. 312345678901" 
+                  />
+                  {errors.transactionId && <p className="text-crimson text-xs mt-1">{errors.transactionId.message}</p>}
                 </div>
               </div>
             )}
