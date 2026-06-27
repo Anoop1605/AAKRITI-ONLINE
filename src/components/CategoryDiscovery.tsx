@@ -19,20 +19,20 @@ export const CategoryDiscovery: React.FC = () => {
       shadowClass: 'shadow-[inset_0_0_150px_rgba(212,160,84,0.05)]'
     },
     {
-      id: 'cultural',
-      title: categories.cultural.title,
-      tagline: categories.cultural.subtitle,
-      icon: <Flame size={64} className="text-[#C0392B] mb-8" />,
-      bgClass: 'bg-gradient-to-b from-[#1A0A0A] to-[#050407]',
-      shadowClass: 'shadow-[inset_0_0_150px_rgba(192,57,43,0.05)]'
-    },
-    {
       id: 'management',
       title: categories.management.title,
       tagline: categories.management.subtitle,
       icon: <Scroll size={64} className="text-[#8B5E1A] mb-8" />,
       bgClass: 'bg-gradient-to-b from-[#1A1208] to-[#050407]',
       shadowClass: 'shadow-[inset_0_0_150px_rgba(139,94,26,0.05)]'
+    },
+    {
+      id: 'cultural',
+      title: categories.cultural.title,
+      tagline: categories.cultural.subtitle,
+      icon: <Flame size={64} className="text-[#C0392B] mb-8" />,
+      bgClass: 'bg-gradient-to-b from-[#1A0A0A] to-[#050407]',
+      shadowClass: 'shadow-[inset_0_0_150px_rgba(192,57,43,0.05)]'
     }
   ];
 

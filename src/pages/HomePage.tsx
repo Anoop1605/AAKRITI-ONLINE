@@ -46,10 +46,10 @@ export const HomePage = () => {
       <EventGrid id="sports" title={categories.sports.title} events={sportsEvents} />
       
       <SectionDivider />
-      <EventGrid id="cultural" title={categories.cultural.title} events={culturalEvents} />
+      <EventGrid id="management" title={categories.management.title} events={managementEvents} />
       
       <SectionDivider />
-      <EventGrid id="management" title={categories.management.title} events={managementEvents} />
+      <EventGrid id="cultural" title={categories.cultural.title} events={culturalEvents} />
       
       {/* Final Registration CTA */}
       <CTABanner />

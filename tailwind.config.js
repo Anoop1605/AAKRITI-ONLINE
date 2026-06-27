@@ -24,7 +24,7 @@ export default {
         
         'text-primary': '#EDE8E0',
         'text-body': '#A89880',
-        'text-ghost': '#4A3A35',
+        'text-ghost': '#bca79eff',
         
         'petal-1': '#E8C4C4',
         'petal-2': '#C4687A',

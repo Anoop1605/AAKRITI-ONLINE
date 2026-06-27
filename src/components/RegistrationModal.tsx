@@ -141,26 +141,26 @@ export const RegistrationModal: React.FC = () => {
                 
                 <div>
                   <label className="block font-body text-text-ghost text-sm mb-1">Full Name</label>
-                  <input {...register('name')} className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" placeholder="John Doe" />
+                  <input {...register('name')} className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" placeholder="Enter your full name" />
                   {errors.name && <p className="text-crimson text-xs mt-1">{errors.name.message}</p>}
                 </div>
 
                 <div>
                   <label className="block font-body text-text-ghost text-sm mb-1">Email</label>
-                  <input type="email" {...register('email')} className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" placeholder="john@example.com" />
+                  <input type="email" {...register('email')} className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" placeholder="Enter your email address" />
                   {errors.email && <p className="text-crimson text-xs mt-1">{errors.email.message}</p>}
                 </div>
 
                 <div>
                   <label className="block font-body text-text-ghost text-sm mb-1">Phone Number</label>
-                  <input {...register('phone')} className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" placeholder="9876543210" />
+                  <input {...register('phone')} className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" placeholder="Enter 10-digit mobile number" />
                   {errors.phone && <p className="text-crimson text-xs mt-1">{errors.phone.message}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block font-body text-text-ghost text-sm mb-1">College</label>
-                    <input {...register('college')} className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" placeholder="SIMS" />
+                    <input {...register('college')} className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" placeholder="Enter your college or institution" />
                     {errors.college && <p className="text-crimson text-xs mt-1">{errors.college.message}</p>}
                   </div>
                   <div>

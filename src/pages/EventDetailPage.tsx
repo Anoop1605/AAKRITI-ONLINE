@@ -17,7 +17,7 @@ export const EventDetailPage: React.FC = () => {
   useDistrictEntranceAnimation(containerRef, event?.districtTheme || '');
 
   // Setup exit animation
-  const playExitAnimation = useDistrictExitAnimation(containerRef, () => navigate(-1));
+  const playExitAnimation = useDistrictExitAnimation(containerRef, () => navigate(`/#${event?.category}`));
 
   if (!event) {
     return (
@@ -254,7 +254,7 @@ export const EventDetailPage: React.FC = () => {
           &larr; BACK TO DISTRICTS
         </button>
         <Link to="/" className="z-50">
-          <span className="font-display font-black text-xl text-[#FFD700] tracking-widest drop-shadow-[0_0_8px_rgba(255,215,0,0.15)]">
+          <span className="font-display font-black text-xl bg-gradient-to-r from-[#D4A054] to-[#C0392B] bg-clip-text text-transparent tracking-widest drop-shadow-[0_0_8px_rgba(255,215,0,0.15)]">
             AAKRITI
           </span>
         </Link>
@@ -280,7 +280,7 @@ export const EventDetailPage: React.FC = () => {
 
         {/* Event Name - Removed inline clipPath to prevent it getting stuck hidden */}
         <h1 
-          className="detail-event-name opacity-0 font-display font-black text-[clamp(36px,10vw,72px)] uppercase tracking-wider text-text-primary leading-none text-center md:text-left mb-4"
+          className="detail-event-name opacity-0 font-display font-black text-[clamp(15px,6vw,25px)] uppercase tracking-wider text-text-primary leading-none text-center md:text-left mb-4"
         >
           {event.name}
         </h1>

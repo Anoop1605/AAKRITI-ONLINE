@@ -26,15 +26,16 @@ export function useHeroAnimation(refs: HeroRefs) {
     if (!heroSection) return;
 
     // --- Entrance Animations ---
+    const hasIntroPlayed = sessionStorage.getItem('introPlayed') === 'true';
     const fadeOutStart = 5.2; 
     const fadeDuration = 1.0;
-    const fullyDisappeared = fadeOutStart + fadeDuration;
+    const fullyDisappeared = hasIntroPlayed ? 0.2 : fadeOutStart + fadeDuration;
 
     // 1. Ghost text waits completely for intro to finish before appearing
     if (ghostText) {
       gsap.fromTo(ghostText,
         { opacity: 0 },
-        { opacity: 0.4, duration: 1.5, ease: 'power2.out', delay: fullyDisappeared + 0.5 }
+        { opacity: 0.5, duration: 1.5, ease: 'power2.out', delay: fullyDisappeared + 0.5 }
       );
     }
 
@@ -88,7 +89,7 @@ export function useHeroAnimation(refs: HeroRefs) {
       const children = countdown.children;
       gsap.fromTo(children,
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out', delay: fullyDisappeared + 1.0 }
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out', delay: fullyDisappeared + 0.6 }
       );
     }
 

@@ -35,8 +35,8 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { name: 'Sports', href: '#sports' },
-    { name: 'Cultural', href: '#cultural' },
     { name: 'Management', href: '#management' },
+    { name: 'Cultural', href: '#cultural' },
   ];
 
   const handleNavLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {

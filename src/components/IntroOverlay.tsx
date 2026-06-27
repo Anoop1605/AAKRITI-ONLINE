@@ -14,41 +14,18 @@ export const IntroOverlay: React.FC = () => {
   const ringsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   const [done, setDone] = useState(false);
+  const [shouldRender] = useState(() => !sessionStorage.getItem('introPlayed'));
 
   useEffect(() => {
-    const root = rootRef.current;
-    const flash = flashRef.current;
     const toriiCanvas = toriiCanvasRef.current;
-    if (!root || !flash || !toriiCanvas) return;
+    if (!toriiCanvas) return;
 
     const tCtx = toriiCanvas.getContext('2d');
     if (!tCtx) return;
 
-    const chars = logoCharsRef.current;
-    const eyebrow = eyebrowRef.current;
-    const subtitle = subtitleRef.current;
-    const tagline = taglineRef.current;
-    const slashL = slashLRef.current;
-    const slashR = slashRRef.current;
-    const rings = ringsRef.current;
-
     let W = 0, H = 0;
     let animId: number;
-    let isFinished = false;
-
-    function resize() {
-      W = window.innerWidth;
-      H = window.innerHeight;
-      if (toriiCanvas) {
-        toriiCanvas.width = W; 
-        toriiCanvas.height = H;
-        if (isFinished) {
-          drawTorii(1, 0.5); // Redraw final state if resized after intro
-        }
-      }
-    }
-    resize();
-    window.addEventListener('resize', resize);
+    let isFinished = !shouldRender;
 
     // Easing helpers
     const easeOut3 = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -131,7 +108,38 @@ export const IntroOverlay: React.FC = () => {
       tCtx!.restore();
     }
 
-    // Petals removed in favor of external PetalCanvas.tsx
+    function resize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      if (toriiCanvas) {
+        toriiCanvas.width = W; 
+        toriiCanvas.height = H;
+        if (isFinished) {
+          drawTorii(1, 0.5); // Redraw final state if resized after intro
+        }
+      }
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    if (!shouldRender) {
+      drawTorii(1, 0.5);
+      return () => {
+        window.removeEventListener('resize', resize);
+      };
+    }
+
+    const root = rootRef.current;
+    const flash = flashRef.current;
+    if (!root || !flash) return;
+
+    const chars = logoCharsRef.current;
+    const eyebrow = eyebrowRef.current;
+    const subtitle = subtitleRef.current;
+    const tagline = taglineRef.current;
+    const slashL = slashLRef.current;
+    const slashR = slashRRef.current;
+    const rings = ringsRef.current;
 
     function burstRing(ring: HTMLElement | null, delay: number) {
       if (!ring) return;
@@ -161,7 +169,6 @@ export const IntroOverlay: React.FC = () => {
     setEl(slashR, { width: '0', opacity: '0' });
     rings.forEach(r => { if(r){ r.style.transform = 'scale(0)'; r.style.opacity = '0'; }});
     setEl(flash, { opacity: '1' });
-
 
     let start: number | null = null;
     const TOTAL = 5200;
@@ -217,7 +224,6 @@ export const IntroOverlay: React.FC = () => {
       const toriiGlow = Math.sin(elapsed * 0.002) * 0.5 + 0.5;
       drawTorii(easeOut3(toriiT), toriiGlow);
 
-
       if (elapsed > 1800) {
         const ep = Math.min((elapsed - 1800) / 600, 1);
         eyebrow!.style.opacity = String(easeOut3(ep));
@@ -262,6 +268,7 @@ export const IntroOverlay: React.FC = () => {
       } else {
         isFinished = true;
         setDone(true);
+        sessionStorage.setItem('introPlayed', 'true');
         if (root) {
           root.style.transition = 'opacity 1s ease-in-out';
           root.style.opacity = '0';
@@ -282,45 +289,47 @@ export const IntroOverlay: React.FC = () => {
     <>
       <canvas ref={toriiCanvasRef} className="fixed inset-0 pointer-events-none z-[1]" />
 
-      <div 
-        ref={rootRef} 
-        className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden ${done ? 'pointer-events-none' : ''}`}
-      >
-        <div ref={flashRef} className="absolute inset-0 bg-[#050407] z-[15] pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,#050407_100%)] z-[5] pointer-events-none" />
+      {shouldRender && (
+        <div 
+          ref={rootRef} 
+          className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden ${done ? 'pointer-events-none' : ''}`}
+        >
+          <div ref={flashRef} className="absolute inset-0 bg-[#050407] z-[15] pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,#050407_100%)] z-[5] pointer-events-none" />
 
-        <div className="relative z-[10] flex flex-col items-center gap-0 text-center select-none">
-          <div ref={eyebrowRef} className="font-heading text-[11px] tracking-[0.5em] text-[#8B5E1A] uppercase opacity-0 translate-y-2 transition-none mb-5">
-            SIMS · Dept. of MBA · Bengaluru
-          </div>
-          <div className="relative flex items-center gap-0">
-            <div ref={slashLRef} className="h-px bg-gradient-to-r from-transparent via-[#D4A054] to-transparent mx-4 opacity-0 self-center shrink-0 transition-none" />
-            <div className="flex flex-nowrap whitespace-nowrap">
-              {"AAKRITI".split('').map((char, i) => (
-                <span 
-                  key={i} 
-                  ref={el => { logoCharsRef.current[i] = el; }} 
-                  className="font-display font-black text-[clamp(38px,9vw,90px)] text-[#FFD700] drop-shadow-[0_0_60px_rgba(255,215,0,0.15)] opacity-0 inline-block leading-none"
-                  style={{ transform: 'translateY(30px) scaleY(0.7)' }}
-                >
-                  {char}
-                </span>
-              ))}
+          <div className="relative z-[10] flex flex-col items-center gap-0 text-center select-none">
+            <div ref={eyebrowRef} className="font-heading text-[11px] tracking-[0.5em] text-[#8B5E1A] uppercase opacity-0 translate-y-2 transition-none mb-5">
+              SIMS · Dept. of MBA · Bengaluru
             </div>
-            <div ref={slashRRef} className="h-px bg-gradient-to-r from-transparent via-[#D4A054] to-transparent mx-4 opacity-0 self-center shrink-0 transition-none" />
+            <div className="relative flex items-center gap-0">
+              <div ref={slashLRef} className="h-px bg-gradient-to-r from-transparent via-[#D4A054] to-transparent mx-4 opacity-0 self-center shrink-0 transition-none" />
+              <div className="flex flex-nowrap whitespace-nowrap">
+                {"AAKRITI".split('').map((char, i) => (
+                  <span 
+                    key={i} 
+                    ref={el => { logoCharsRef.current[i] = el; }} 
+                    className="font-display font-black text-[clamp(38px,9vw,90px)] bg-gradient-to-r from-[#D4A054] to-[#C0392B] bg-clip-text text-transparent drop-shadow-[0_0_60px_rgba(255,215,0,0.15)] opacity-0 inline-block leading-none"
+                    style={{ transform: 'translateY(30px) scaleY(0.7)' }}
+                  >
+                    {char}
+                  </span>
+                ))}
+              </div>
+              <div ref={slashRRef} className="h-px bg-gradient-to-r from-transparent via-[#D4A054] to-transparent mx-4 opacity-0 self-center shrink-0 transition-none" />
+            </div>
+            <div ref={subtitleRef} className="font-body italic text-[14px] tracking-[0.35em] text-[#A89880] opacity-0 mt-[18px] whitespace-nowrap">
+              SIMS Intercollegiate Fest · 2026
+            </div>
+            <div ref={taglineRef} className="font-heading text-[11px] tracking-[0.3em] text-[#C0392B] opacity-0 mt-[28px] uppercase">
+              Enter the Castle. Prove Your Realm.
+            </div>
           </div>
-          <div ref={subtitleRef} className="font-body italic text-[14px] tracking-[0.35em] text-[#A89880] opacity-0 mt-[18px] whitespace-nowrap">
-            SIMS Intercollegiate Fest · 2026
-          </div>
-          <div ref={taglineRef} className="font-heading text-[11px] tracking-[0.3em] text-[#C0392B] opacity-0 mt-[28px] uppercase">
-            Enter the Castle. Prove Your Realm.
-          </div>
-        </div>
 
-        <div ref={el => { ringsRef.current[0] = el; }} className="absolute border border-transparent rounded-full pointer-events-none z-[1] scale-0" style={{ width: '160px', height: '160px', marginLeft: '-80px', marginTop: '-80px', top: '50%', left: '50%' }} />
-        <div ref={el => { ringsRef.current[1] = el; }} className="absolute border border-transparent rounded-full pointer-events-none z-[1] scale-0" style={{ width: '320px', height: '320px', marginLeft: '-160px', marginTop: '-160px', top: '50%', left: '50%' }} />
-        <div ref={el => { ringsRef.current[2] = el; }} className="absolute border border-transparent rounded-full pointer-events-none z-[1] scale-0" style={{ width: '520px', height: '520px', marginLeft: '-260px', marginTop: '-260px', top: '50%', left: '50%' }} />
-      </div>
+          <div ref={el => { ringsRef.current[0] = el; }} className="absolute border border-transparent rounded-full pointer-events-none z-[1] scale-0" style={{ width: '160px', height: '160px', marginLeft: '-80px', marginTop: '-80px', top: '50%', left: '50%' }} />
+          <div ref={el => { ringsRef.current[1] = el; }} className="absolute border border-transparent rounded-full pointer-events-none z-[1] scale-0" style={{ width: '320px', height: '320px', marginLeft: '-160px', marginTop: '-160px', top: '50%', left: '50%' }} />
+          <div ref={el => { ringsRef.current[2] = el; }} className="absolute border border-transparent rounded-full pointer-events-none z-[1] scale-0" style={{ width: '520px', height: '520px', marginLeft: '-260px', marginTop: '-260px', top: '50%', left: '50%' }} />
+        </div>
+      )}
     </>
   );
 };

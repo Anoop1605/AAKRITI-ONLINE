@@ -62,7 +62,7 @@ export const Hero: React.FC = () => {
       {/* Layer 3: Ghost Text Split */}
       <div 
         ref={ghostTextRef}
-        className="hero-ghost-text absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center font-display font-black text-[clamp(40px,11vw,170px)] select-none pointer-events-none leading-none tracking-[0.12em] z-0 opacity-0 flex justify-center items-center flex-nowrap whitespace-nowrap"
+        className="hero-ghost-text absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center font-display font-black text-[clamp(40px,11vw,170px)] select-none pointer-events-none leading-none tracking-[0.12em] z-0 opacity-0 flex justify-center items-center flex-nowrap whitespace-nowrap"
       >
         <span className="ghost-text-gold-red">AAKRITI</span>
       </div>
@@ -98,17 +98,9 @@ export const Hero: React.FC = () => {
           Enter the Castle. Prove Your Realm.
         </p>
 
-        <button 
-          ref={ctaRef}
-          onClick={openModal}
-          className="bg-[#C0392B] hover:bg-crimson-hi text-text-primary font-heading font-semibold tracking-widest text-[clamp(14px,3vw,16px)] py-4 px-10 rounded-[2px] transition-colors mb-16 opacity-0"
-        >
-          ENTER THE GATE &darr;
-        </button>
-
         <div 
           ref={countdownRef}
-          className="flex items-center gap-6 md:gap-10 font-mono text-gold opacity-0"
+          className="flex items-center gap-6 md:gap-10 font-mono text-gold"
         >
           {[
             { label: 'DAYS', value: timeLeft.days },

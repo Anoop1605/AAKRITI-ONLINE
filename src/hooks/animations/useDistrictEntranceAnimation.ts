@@ -61,8 +61,8 @@ export function useDistrictEntranceAnimation(
       0.6
     );
     master.fromTo(eventName,
-      { clipPath: 'inset(100% 0% 0% 0%)', y: 12 },
-      { clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 0.8, ease: 'power4.out' },
+      { clipPath: 'inset(100% 0% 0% 0%)', y: 12, opacity: 0 },
+      { clipPath: 'inset(0% 0% 0% 0%)', y: 0, opacity: 1, duration: 0.8, ease: 'power4.out' },
       0.75
     );
     master.fromTo(tagline,
