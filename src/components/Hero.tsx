@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FEST_DATE, DEPT_NAME, COLLEGE_NAME } from '../lib/constants';
 import { useHeroAnimation } from '../hooks/animations/useHeroAnimation';
-import { useRegistrationStore } from '../store/registrationStore';
 
 export const Hero: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
-  const { openModal } = useRegistrationStore();
 
   const heroRef = useRef<HTMLElement>(null);
   const stoneBgRef = useRef<HTMLDivElement>(null);
