@@ -60,9 +60,13 @@ export const Navbar: React.FC = () => {
       <nav ref={navbarRef} className="fixed top-0 left-0 right-0 z-[100] px-6 py-4 flex items-center justify-between transition-colors">
         {/* Logo Container */}
         <div className="w-[160px]">
-          <Link to="/" className="block pointer-events-auto transition-opacity hover:opacity-80">
+          <Link to="/" className="navbar-logo block pointer-events-auto transition-opacity hover:opacity-80">
             <svg width="160" height="36" viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AAKRITI">
               <defs>
+                <linearGradient id="gold-to-red-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#D4A054" />
+                  <stop offset="100%" stopColor="#C0392B" />
+                </linearGradient>
                 <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#D4A054" />
                   <stop offset="100%" stopColor="#F0C070" />
@@ -80,25 +84,16 @@ export const Navbar: React.FC = () => {
                 </filter>
               </defs>
 
-              {/* "AA" in crimson — fire identity */}
+              {/* "AAKRITI" in gold to red gradient */}
               <text
-                x="7" y="28"
+                x="7"
+                y="28"
                 fontFamily="'Cinzel Decorative', serif"
                 fontWeight="900"
                 fontSize="26"
-                fill="url(#crimson-grad)"
+                fill="url(#gold-to-red-grad)"
                 filter="url(#logo-glow)"
-              >AA</text>
-
-              {/* "KRITI" in gold — craft identity */}
-              <text
-                x="46" y="28"
-                fontFamily="'Cinzel Decorative', serif"
-                fontWeight="900"
-                fontSize="26"
-                fill="url(#gold-grad)"
-                filter="url(#logo-glow)"
-              >KRITI</text>
+              >AAKRITI</text>
             </svg>
           </Link>
         </div>
@@ -110,7 +105,7 @@ export const Navbar: React.FC = () => {
               key={link.name} 
               href={link.href} 
               onClick={(e) => handleNavLink(e, link.href)}
-              className="nav-link-blade font-body text-text-primary transition-colors duration-300 text-lg"
+              className="nav-link-blade font-body transition-colors duration-300 text-lg"
             >
               {link.name}
             </a>
@@ -159,7 +154,7 @@ export const Navbar: React.FC = () => {
                 ref={el => { if (el) linksRef.current[i] = el; }}
                 href={link.href}
                 onClick={(e) => handleNavLink(e, link.href)}
-                className="mobile-nav-link font-body text-4xl font-medium tracking-wide text-text-primary text-center opacity-0 transition-all duration-300"
+                className="mobile-nav-link font-body text-4xl font-medium tracking-wide text-center opacity-0 transition-all duration-300"
               >
                 {link.name}
               </a>

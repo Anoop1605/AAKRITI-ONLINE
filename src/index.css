@@ -53,21 +53,12 @@ body {
   100% { background-position: center -200%; }
 }
 
-.ghost-split-gold-black {
-  background: linear-gradient(180deg, #e6ae5a 0%, #111111 90%);
+.ghost-text-gold-red {
+  background: linear-gradient(135deg, #D4A054 0%, #C0392B 70%, #050407 100%);
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-stroke: 1px rgba(212, 160, 84, 0.4);
-  display: inline-block;
-}
-/* Red to Black Vertical Gradient */
-.ghost-text-red-black {
-  background: linear-gradient(180deg, #FF6B6B 0%, #8B1A1A 50%, #050505 100%);
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-stroke: 1.5px rgba(192, 57, 43, 0.4); /* Subtle crimson outline */
+  -webkit-text-stroke: 1.5px rgba(212, 160, 84, 0.4);
   display: inline-block;
 }
 
@@ -549,6 +540,12 @@ body {
   position: relative;
   overflow: hidden;
   padding-bottom: 4px; /* Space for the blade */
+  background: linear-gradient(90deg, #D4A054 0%, #C0392B 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  transition: background 0.3s ease, text-shadow 0.3s ease;
 }
 
 .nav-link-blade::before {
@@ -570,8 +567,11 @@ body {
 }
 
 .nav-link-blade:hover {
-  color: #D4A054;
-  text-shadow: 0 0 15px rgba(212, 160, 84, 0.3);
+  background: linear-gradient(90deg, #FFD700 0%, #E53935 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
 }
 
 /* --- Mobile Menu Ambient Fire Glow --- */
@@ -592,9 +592,18 @@ body {
 }
 
 /* Enhancing the mobile links to match the blade aesthetic */
+.mobile-nav-link {
+  background: linear-gradient(90deg, #D4A054 0%, #C0392B 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  transition: background 0.3s ease, text-shadow 0.3s ease;
+}
+
 .mobile-nav-link:hover {
   color: transparent;
-  background: linear-gradient(90deg, #FFD700, #C0392B);
+  background: linear-gradient(90deg, #FFD700, #E53935 100%);
   -webkit-background-clip: text;
   background-clip: text;
   text-shadow: 0 0 20px rgba(229, 57, 53, 0.4);

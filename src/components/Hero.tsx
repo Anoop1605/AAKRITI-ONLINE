@@ -62,10 +62,9 @@ export const Hero: React.FC = () => {
       {/* Layer 3: Ghost Text Split */}
       <div 
         ref={ghostTextRef}
-        className="hero-ghost-text absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center font-display font-black text-[clamp(40px,11vw,170px)] select-none pointer-events-none leading-none tracking-[0.12em] z-0 opacity-0 flex justify-center items-center flex-nowrap whitespace-nowrap gap-1"
+        className="hero-ghost-text absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center font-display font-black text-[clamp(40px,11vw,170px)] select-none pointer-events-none leading-none tracking-[0.12em] z-0 opacity-0 flex justify-center items-center flex-nowrap whitespace-nowrap"
       >
-        <span className="ghost-text-red-black">AA</span>
-        <span className="ghost-split-gold-black">KRITI</span>
+        <span className="ghost-text-gold-red">AAKRITI</span>
       </div>
 
       {/* Layer 5: Content */}
