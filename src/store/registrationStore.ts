@@ -2,8 +2,8 @@ import { create } from 'zustand';
 
 interface RegistrationState {
   isOpen: boolean;
-  step: number; // 1: User Details, 2: Choose District, 3: Confirm
-  selectedEvents: string[]; // Array of event IDs
+  step: number; // 1: User Details, 2: Team Roster, 3: Payment
+  selectedEventId: string | null; // Changed from array to single string
   userDetails: {
     name: string;
     email: string;
@@ -11,11 +11,13 @@ interface RegistrationState {
     college: string;
     year: string;
   };
-  isDirectRegistration: boolean; // Flags direct register clicked from detail page
+  isAboutOpen: boolean;
   openModal: () => void;
   closeModal: () => void;
+  openAbout: () => void;
+  closeAbout: () => void;
   setStep: (step: number) => void;
-  toggleEvent: (eventId: string) => void;
+  setEvent: (eventId: string) => void; // Replaced toggleEvent
   setUserDetails: (details: Partial<RegistrationState['userDetails']>) => void;
   reset: () => void;
 }
@@ -31,32 +33,25 @@ const initialUserDetails = {
 export const useRegistrationStore = create<RegistrationState>((set) => ({
   isOpen: false,
   step: 1,
-  selectedEvents: [],
+  selectedEventId: null, // Default to null
   userDetails: initialUserDetails,
-  isDirectRegistration: false,
+  isAboutOpen: false,
 
   openModal: () => set({ isOpen: true }),
   closeModal: () => set({ isOpen: false }),
+  openAbout: () => set({ isAboutOpen: true }),
+  closeAbout: () => set({ isAboutOpen: false }),
   setStep: (step) => set({ step }),
+  setEvent: (eventId) => set({ selectedEventId: eventId }),
   
-  toggleEvent: (eventId) => set((state) => {
-    const isSelected = state.selectedEvents.includes(eventId);
-    return {
-      selectedEvents: isSelected 
-        ? state.selectedEvents.filter(id => id !== eventId)
-        : [...state.selectedEvents, eventId]
-    };
-  }),
-
   setUserDetails: (details) => set((state) => ({
     userDetails: { ...state.userDetails, ...details }
   })),
-
   reset: () => set({
     isOpen: false,
     step: 1,
-    selectedEvents: [],
+    selectedEventId: null,
     userDetails: initialUserDetails,
-    isDirectRegistration: false,
+    isAboutOpen: false,
   })
 }));

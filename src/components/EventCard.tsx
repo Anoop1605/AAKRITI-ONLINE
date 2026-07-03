@@ -113,6 +113,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, onClick }) => {
   return (
     <Link 
       to={`/events/${event.id}`}
+      state={{ fromHome: true }}
       ref={cardRef}
       className="event-card relative w-full h-[400px] flex flex-col justify-end p-6 overflow-hidden rounded-[2px] border border-stone-mid/30 bg-stone group opacity-100 cursor-pointer block no-underline text-current"
       onClick={onClick}

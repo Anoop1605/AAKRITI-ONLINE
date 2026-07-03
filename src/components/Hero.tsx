@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FEST_DATE, DEPT_NAME, COLLEGE_NAME } from '../lib/constants';
 import { useHeroAnimation } from '../hooks/animations/useHeroAnimation';
+import { useRegistrationStore } from '../store/registrationStore';
 
 export const Hero: React.FC = () => {
+  const { openAbout } = useRegistrationStore();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
 
   const heroRef = useRef<HTMLElement>(null);
@@ -69,12 +71,12 @@ export const Hero: React.FC = () => {
       <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-4xl mx-auto mt-16">
         <p 
           ref={eyebrowRef} 
-          className="font-body italic text-text-body text-[clamp(12px,3vw,16px)] tracking-widest uppercase mb-4 opacity-0"
+          className="font-body italic text-text-body text-[clamp(12px,3vw,16px)] tracking-widest uppercase mb-10 md:mb-4 opacity-0"
         >
           {COLLEGE_NAME} &middot; {DEPT_NAME} &middot; Inter-collegiate Fest
         </p>
 
-        <div className="flex flex-col items-center justify-center space-y-1 mb-8 relative">
+        <div className="flex flex-col items-center justify-center space-y-1 mt-6 md:mt-0 mb-8 relative">
           <h1 
             ref={el => { if(el) linesRef.current[0] = el; }} 
             className="hero-line hero-aakriti-animate font-display font-black text-[clamp(48px,12vw,110px)] leading-[1.1] tracking-wider opacity-0"
@@ -111,6 +113,19 @@ export const Hero: React.FC = () => {
               <span className="text-text-ghost text-[10px] md:text-xs tracking-widest">{item.label}</span>
             </div>
           ))}
+        </div>
+
+        {/* Mobile About Button */}
+        <div className="mt-12 md:hidden">
+          <button 
+            onClick={openAbout}
+            className="group relative px-8 py-3 bg-[#050407] border border-crimson/40 hover:border-gold rounded-[2px] transition-all duration-300 overflow-hidden shadow-[0_0_15px_rgba(192,57,43,0.15)] hover:shadow-[0_0_25px_rgba(212,160,84,0.25)]"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-crimson/10 to-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <span className="relative z-10 text-premium-fire font-heading font-semibold tracking-wider text-sm">
+              ABOUT AAKRITI
+            </span>
+          </button>
         </div>
       </div>
     </section>

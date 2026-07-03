@@ -94,6 +94,22 @@ body {
   pointer-events: none;
 }
 
+/* Custom background variables for new sport districts */
+.card-tug {
+  background: radial-gradient(ellipse at 50% 110%, #2b1f1d 0%, transparent 60%), linear-gradient(180deg, #090606 0%, #120d0c 100%);
+}
+.card-tug::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 2px,
+    #D4A054 2px, #D4A054 4px
+  );
+  pointer-events: none;
+}
+
 /* 2. Wind Breathing (Volleyball) */
 .card-wind {
   background: 
@@ -147,6 +163,21 @@ body {
     linear-gradient(180deg, #0A0806 0%, #1A0E08 100%);
 }
 .card-iron::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background: repeating-linear-gradient(
+    90deg, transparent, transparent 14px,
+    #8B5E1A 14px, #8B5E1A 16px
+  );
+  pointer-events: none;
+}
+
+.card-cricket {
+  background: radial-gradient(ellipse at 50% 0%, #15222e 0%, transparent 55%), linear-gradient(180deg, #060a0e 0%, #0c1218 100%);
+}
+.card-cricket::before {
   content: '';
   position: absolute;
   inset: 0;

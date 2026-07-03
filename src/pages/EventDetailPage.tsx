@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { events } from '../data/events';
 import { useRegistrationStore } from '../store/registrationStore';
 import { useDistrictEntranceAnimation } from '../hooks/animations/useDistrictEntranceAnimation';
@@ -8,16 +8,24 @@ import { useDistrictExitAnimation } from '../hooks/animations/useDistrictExitAni
 export const EventDetailPage: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const event = events.find((e) => e.id === eventId);
-  const { openModal, setStep } = useRegistrationStore();
+  const { openModal } = useRegistrationStore();
 
   // Run the entrance animation
   useDistrictEntranceAnimation(containerRef, event?.districtTheme || '');
 
   // Setup exit animation
-  const playExitAnimation = useDistrictExitAnimation(containerRef, () => navigate(`/#${event?.category}`));
+  const playExitAnimation = useDistrictExitAnimation(containerRef, () => {
+    const hasHistory = (window.history.state && window.history.state.idx > 0) || location.state?.fromHome;
+    if (hasHistory) {
+      navigate(-1);
+    } else {
+      navigate(`/#${event?.category}`);
+    }
+  });
 
   if (!event) {
     return (
@@ -32,14 +40,11 @@ export const EventDetailPage: React.FC = () => {
   }
 
   const handleRegister = () => {
-    // 1. Reset and pre-select the current event id, flag direct registration
+    // Set the specific event and start at step 1
     useRegistrationStore.setState({ 
-      selectedEvents: [event.id],
-      isDirectRegistration: true
+      selectedEventId: event.id,
+      step: 1 
     });
-    // 2. Start at Step 1
-    setStep(1);
-    // 3. Open the registration modal
     openModal();
   };
 
@@ -64,6 +69,7 @@ export const EventDetailPage: React.FC = () => {
   const renderAmbientElements = (theme: string) => {
     switch (theme) {
       case 'card-stone':
+      case 'card-tug':
         return (
           <>
             <div className="detail-torch-glow absolute w-[100px] h-[100px] rounded-full pointer-events-none z-10" style={{ left: '15%', top: '60%', transform: 'translate(-50%, -50%)', background: 'radial-gradient(circle, rgba(212,160,84,0.18) 0%, transparent 70%)' }} />
@@ -99,6 +105,7 @@ export const EventDetailPage: React.FC = () => {
           </>
         );
       case 'card-iron':
+      case 'card-cricket':
         return (
           <>
             <div className="detail-forge-heat absolute w-[500px] h-[400px] rounded-full pointer-events-none z-10" style={{ bottom: '0', left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(ellipse, rgba(139,30,10,0.16) 0%, transparent 75%)' }} />
@@ -322,10 +329,16 @@ export const EventDetailPage: React.FC = () => {
               <span className="font-heading text-gold text-xs tracking-widest block mb-1">TIME</span>
               <span className="font-body text-text-primary text-sm">{event.time}</span>
             </div>
-            <div className="col-span-2">
+            <div className={event.contact ? "col-span-1" : "col-span-2"}>
               <span className="font-heading text-gold text-xs tracking-widest block mb-1">REGISTRATION FEE</span>
               <span className="font-body text-crimson text-sm font-semibold">{event.fee}</span>
             </div>
+            {event.contact && (
+              <div>
+                <span className="font-heading text-gold text-xs tracking-widest block mb-1">CONTACT</span>
+                <span className="font-body text-text-primary text-sm">{event.contact}</span>
+              </div>
+            )}
           </div>
           
           <div>

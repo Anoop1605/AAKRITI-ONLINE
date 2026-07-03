@@ -16,81 +16,178 @@ export interface Event {
   venue: string;             // Venue details
   time: string;              // Time of the event
   fee: string;               // Registration fee
+  contact?: string;          // Direct mobile contact for event head
 }
 
 export const events: Event[] = [
-  // ── SPORTS ──────────────────────────────────────────
+  // === SPORTS (THE BREATHING DISTRICTS) ===
   {
-    id: 'sp-01', name: 'Throwball', category: 'sports',
+    id: 'sp-01', 
+    name: 'Throwball', 
+    category: 'sports',
     districtName: 'Stone Breathing District',
     districtTheme: 'card-stone',
-    tagline: 'Strength. Speed. Precision.',
-    description: 'Fast-paced battle of reflexes and raw throwing power.',
-    teamSize: '9v9', duration: '45 min', icon: 'Circle',
-    rules: ['Knockout format', 'Standard referee decisions are final', 'ID cards mandatory'],
-    venue: 'Main Ground, Castle Courtyard',
-    time: 'Day 1, 10:00 AM',
-    fee: '₹300 per team'
+    tagline: 'Catch. Release. Conquer.',
+    description: 'A fast-paced test of aerial coordination and lightning-quick court reflexes.',
+    teamSize: '7v7 (Max 10 per team)', 
+    duration: 'Best of 3 Sets', 
+    icon: 'Circle',
+    rules: [
+      'Max 10 players (7 active on court, 3 substitutes).',
+      'Ball must be caught with both hands and returned with one hand only.',
+      'Ball must be released from above the shoulder line within 3 seconds of catching.',
+      'Two players cannot catch or touch the ball simultaneously.',
+      'Service must be from behind the end line cleanly out of the palm.',
+      'Net touch by players or body touch by the ball (other than palms/hands) is a foul.'
+    ],
+    venue: 'College Ground',
+    time: '18/07/2026, 9:30 AM',
+    fee: '₹649 per team',
+    contact: 'Sushanth J: 9742688153'
   },
   {
-    id: 'sp-02', name: 'Volleyball', category: 'sports',
+    id: 'sp-02', 
+    name: 'Volleyball', 
+    category: 'sports',
     districtName: 'Wind Breathing District',
     districtTheme: 'card-wind',
-    tagline: 'Rise. Spike. Conquer.',
-    description: 'Six warriors per side. One court. Endless sky.',
-    teamSize: '6v6', duration: '60 min', icon: 'ArrowUp',
-    rules: ['Standard 6v6 rotation rules', 'Best of 3 sets match', 'Net touch is a foul'],
-    venue: 'Outdoor Court, Wind Pagoda',
-    time: 'Day 1, 11:30 AM',
-    fee: '₹300 per team'
+    tagline: 'Rise. Spike. Dominate.',
+    description: 'Six warriors guarding the floor, soaring high to break through the enemy defense.',
+    teamSize: '6v6 (Max 10 per team)', 
+    duration: 'Best of 3 Sets', 
+    icon: 'ArrowUp',
+    rules: [
+      'Max 10 players per team (6 on court, 4 rolling substitutes).',
+      'Preliminary rounds are best of 3 sets (15 points each, deciding 3rd set to 15).',
+      'Rally point system applies. Must win by a minimum 2-point margin.',
+      'A maximum of 3 touches per side is permitted (blocking does not count as a touch).',
+      'No player is allowed to touch the net or cross the center line completely during active play.'
+    ],
+    venue: 'College Ground',
+    time: '20/07/2026, 9:30 AM',
+    fee: '₹590 per team',
+    contact: 'Karthik P V: 8296555433'
   },
   {
-    id: 'sp-03', name: 'Carrom', category: 'sports',
+    id: 'sp-03', 
+    name: 'Carrom', 
+    category: 'sports',
     districtName: 'Shadow Breathing District',
     districtTheme: 'card-shadow',
-    tagline: 'Precision. Silence. Victory.',
-    description: 'In the quiet chamber, only focus survives.',
-    teamSize: '1v1 / 2v2', duration: '30 min', icon: 'Target',
-    rules: ['Singles/Doubles tournament format', 'White pocket is 10pts, Black is 5pts', 'Queen must be covered'],
-    venue: 'Indoor Board Room, Shadow Chamber',
-    time: 'Day 1, 01:00 PM',
-    fee: '₹100 per player'
+    tagline: 'Precision. Silence. Strike.',
+    description: 'In the quiet chamber, a single calculated flick decides who claims the board.',
+    teamSize: 'Singles / Doubles', 
+    duration: 'Points Based', 
+    icon: 'Target',
+    rules: [
+      'Coin toss decides choice of break (striking first plays White) or board side.',
+      'Striker must touch both the front and back line of your baseline cleanly.',
+      'Striker must be flicked with a single finger; forward pushing/shoving is a foul.',
+      'Queen can be pocketed anytime after your first piece is down, but must be covered next strike.',
+      'The Queen cannot be pocketed last. If pocketed alongside your final piece, you lose the board.',
+      'Fouls (pocketing striker, touching other pieces) incur a "Due" penalty piece returned to center.'
+    ],
+    venue: 'College Auditorium',
+    time: '20/07/2026, 11:00 AM',
+    fee: '₹177 per entry',
+    contact: 'Prem Kumar S: 9110438565'
   },
   {
-    id: 'sp-04', name: 'Table Tennis', category: 'sports',
+    id: 'sp-04', 
+    name: 'Table Tennis', 
+    category: 'sports',
     districtName: 'Thunder Breathing District',
     districtTheme: 'card-thunder',
     tagline: 'Strike. Faster.',
     description: 'Lightning reflexes. Millisecond decisions.',
-    teamSize: '1v1', duration: '20 min', icon: 'Zap',
+    teamSize: '1v1', 
+    duration: '20 min', 
+    icon: 'Zap',
     rules: ['Best of 5 games', '11 points per game', 'ITTF service rules apply'],
     venue: 'TT Hall, West Wing',
     time: 'Day 1, 02:30 PM',
     fee: '₹150 per player'
   },
   {
-    id: 'sp-05', name: 'Powerlifting', category: 'sports',
+    id: 'sp-05', 
+    name: 'Powerlifting', 
+    category: 'sports',
     districtName: 'Iron Breathing District',
     districtTheme: 'card-iron',
     tagline: 'Forge. Break. Surpass.',
     description: 'Test the absolute limits of raw human strength.',
-    teamSize: 'Solo', duration: '45 min', icon: 'Dumbbell',
+    teamSize: 'Solo', 
+    duration: '45 min', 
+    icon: 'Dumbbell',
     rules: ['Three attempts per lift', 'Squat, Bench, and Deadlift total weight wins', 'Lifting gears allowed'],
     venue: 'Castle Gymnasium, Iron Forge',
     time: 'Day 2, 09:30 AM',
     fee: '₹200 per player'
   },
   {
-    id: 'sp-06', name: 'Squats Challenge', category: 'sports',
+    id: 'sp-06', 
+    name: 'Squats Challenge', 
+    category: 'sports',
     districtName: 'Earth Breathing District',
     districtTheme: 'card-earth',
     tagline: 'One more. Always one more.',
     description: 'Max reps. Max will. Who breaks first?',
-    teamSize: 'Solo', duration: '15 min', icon: 'TrendingDown',
+    teamSize: 'Solo', 
+    duration: '15 min', 
+    icon: 'TrendingDown',
     rules: ['Time limit of 2 minutes', 'Proper depth is mandatory per rep', 'No resting at the top of motion'],
     venue: 'Temple Grounds, Stone Pillars',
     time: 'Day 2, 11:00 AM',
     fee: '₹100 per player'
+  },
+  {
+    id: 'sp-07', 
+    name: 'Tug of War', 
+    category: 'sports',
+    districtName: 'Unbreakable Grip District',
+    districtTheme: 'card-tug', 
+    tagline: 'Hold Ground. Break Spirits.',
+    description: 'Eight pullers acting as one wall of absolute resistance. Do not break connection.',
+    teamSize: '8 Pullers', 
+    duration: 'Best of 3 Pulls', 
+    icon: 'Swords',
+    rules: [
+      '8 active pullers per team. Max weight strictly enforced (e.g. Men: 640kg, Women: 480kg).',
+      'Knockout brackets format, best of 3 pulls total.',
+      'A pull is won when opponent’s closest rope marker crosses the center line on the ground.',
+      'No Anchoring: Rope cannot be wrapped/tied around body (except safety rules for the end anchor).',
+      'No Sitting/Locking: Feet must remain flat. Sitting or locking limbs to stall is a foul.',
+      'Proper footwear required (no spiked boots or bare feet unless specified).'
+    ],
+    venue: 'College Ground',
+    time: '20/07/2026, 12:00 PM',
+    fee: '₹826 per team',
+    contact: 'Manoj Gowda D M: 8660229528'
+  },
+  {
+    id: 'sp-08', 
+    name: 'Cricket', 
+    category: 'sports',
+    districtName: 'Supreme Arena District',
+    districtTheme: 'card-cricket', 
+    tagline: '8 Overs. Infinite Glory.',
+    description: 'High-octane T8 format where strategic positioning and heavy hitting rule the pitch.',
+    teamSize: '11 Players', 
+    duration: '8 Overs per Innings', 
+    icon: 'Activity',
+    rules: [
+      'Maximum of 2 overs per single bowler. Remaining overs shared across the team.',
+      'Overs 1-2 are Mandatory Powerplay (Max 2 fielders outside 30-yard circle).',
+      'Overs 3-8 allow a maximum of 5 fielders outside the circle.',
+      '30-minute strict limit per innings. Delay penalizes by forcing an extra fielder inside.',
+      'Standard ICC extras: Wide/No-Ball = 1 penalty run + extra ball. Free hit on all No-Balls.',
+      'Tie-Breaker: 1 Over Super Over (Max 2 wickets). Further ties broken by main match boundaries.',
+      'Live tournament score tracking will be updated directly via Cric-Heroes.'
+    ],
+    venue: 'Hoysala Ground, New Town',
+    time: '18/07/2026 & 19/07/2026, 8:00 AM',
+    fee: '₹1121 per team',
+    contact: 'K A Adarsha: 7483975962'
   },
 
   // ── CULTURAL ────────────────────────────────────────
@@ -227,47 +324,6 @@ export const events: Event[] = [
     venue: 'Innovation Quarter Courtyard Stalls',
     time: 'Day 1, Full Day',
     fee: '₹400 per stall'
-  },
-
-  // ── RESERVED SLOTS ──────────────────────────────────
-  {
-    id: 'ph-01', name: '[EVENT NAME]', category: 'sports',
-    districtName: 'The Forgotten District',
-    districtTheme: 'card-placeholder-1',
-    tagline: '[To be written]',
-    description: 'A mysterious realm yet to be unveiled. Keep watch.',
-    teamSize: '[TEAM]', duration: '[DURATION]', icon: 'HelpCircle',
-    isPlaceholder: true,
-    rules: [],
-    venue: 'TBD',
-    time: 'TBD',
-    fee: 'TBD'
-  },
-  {
-    id: 'ph-02', name: '[EVENT NAME]', category: 'cultural',
-    districtName: 'The Forgotten District',
-    districtTheme: 'card-placeholder-2',
-    tagline: '[To be written]',
-    description: 'A mysterious realm yet to be unveiled. Keep watch.',
-    teamSize: '[TEAM]', duration: '[DURATION]', icon: 'HelpCircle',
-    isPlaceholder: true,
-    rules: [],
-    venue: 'TBD',
-    time: 'TBD',
-    fee: 'TBD'
-  },
-  {
-    id: 'ph-03', name: '[EVENT NAME]', category: 'management',
-    districtName: 'The Forgotten District',
-    districtTheme: 'card-placeholder-3',
-    tagline: '[To be written]',
-    description: 'A mysterious realm yet to be unveiled. Keep watch.',
-    teamSize: '[TEAM]', duration: '[DURATION]', icon: 'HelpCircle',
-    isPlaceholder: true,
-    rules: [],
-    venue: 'TBD',
-    time: 'TBD',
-    fee: 'TBD'
   }
 ];
 
@@ -276,7 +332,7 @@ export const categories = {
   sports: {
     title: 'The Breathing Districts',
     subtitle: 'Where Strength Meets Honour',
-    count: 6,
+    count: 8,
     theme: 'stone',
     color: '#D4A054'
   },

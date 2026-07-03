@@ -4,10 +4,12 @@ export type EntranceFn = (container: HTMLElement) => GSAPTimeline;
 
 export const DISTRICT_ENTRANCE_MAP: Record<string, EntranceFn> = {
   'card-stone': buildStoneEntrance,
+  'card-tug': buildStoneEntrance,
   'card-wind': buildWindEntrance,
   'card-shadow': buildShadowEntrance,
   'card-thunder': buildThunderEntrance,
   'card-iron': buildIronEntrance,
+  'card-cricket': buildIronEntrance,
   'card-earth': buildEarthEntrance,
   'card-elegance': buildEleganceEntrance,
   'card-moonlight': buildMoonlightEntrance,

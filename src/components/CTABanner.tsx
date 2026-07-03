@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import { useRegistrationStore } from '../store/registrationStore';
 import { gsap } from '../lib/gsap';
 
 export const CTABanner: React.FC = () => {
-  const { openModal } = useRegistrationStore();
   const bannerRef = useRef<HTMLElement>(null);
   
   useEffect(() => {
@@ -42,7 +40,14 @@ export const CTABanner: React.FC = () => {
         </h2>
 
         <button 
-          onClick={openModal}
+          onClick={() => {
+            const target = document.getElementById('sports');
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
           className="group relative bg-crimson hover:bg-crimson-hi text-text-primary font-heading font-semibold tracking-[0.2em] text-[clamp(16px,4vw,20px)] py-5 px-12 rounded-[2px] transition-all duration-300 shadow-[0_0_20px_rgba(192,57,43,0.4)] hover:shadow-[0_0_40px_rgba(192,57,43,0.6)]"
         >
           <span className="relative z-10">OPEN THE GATES</span>

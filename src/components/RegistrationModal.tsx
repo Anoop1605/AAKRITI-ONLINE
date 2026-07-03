@@ -1,11 +1,42 @@
-import React, { useRef, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useRef, useEffect, useState } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { X, Check } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useRegistrationStore } from '../store/registrationStore';
 import { events } from '../data/events';
-import { gsap } from '../lib/gsap';
+import { gsap, ScrollTrigger } from '../lib/gsap';
+
+// Helper to parse event team details
+const getTeamDetails = (eventId: string | null) => {
+  if (!eventId) return { isSolo: true, min: 1, max: 1 };
+  const event = events.find(e => e.id === eventId);
+  if (!event) return { isSolo: true, min: 1, max: 1 };
+  
+  const size = event.teamSize.toLowerCase();
+  
+  if (size.includes('solo') || size === '1v1' || size === 'singles') {
+    return { isSolo: true, min: 1, max: 1 };
+  }
+  
+  if (size.includes('7v7')) return { isSolo: false, min: 7, max: 10 };
+  if (size.includes('6v6')) return { isSolo: false, min: 6, max: 10 };
+  if (size.includes('doubles')) return { isSolo: false, min: 2, max: 2 };
+  if (size.includes('8 pullers')) return { isSolo: false, min: 8, max: 8 };
+  if (size.includes('11 players')) return { isSolo: false, min: 11, max: 11 };
+  
+  const rangeMatch = size.match(/(\d+)\s*[-–]\s*(\d+)/);
+  if (rangeMatch) {
+    return { isSolo: false, min: parseInt(rangeMatch[1]), max: parseInt(rangeMatch[2]) };
+  }
+  
+  const exactMatch = size.match(/^(\d+)$/);
+  if (exactMatch) {
+    return { isSolo: false, min: parseInt(exactMatch[1]), max: parseInt(exactMatch[1]) };
+  }
+  
+  return { isSolo: false, min: 2, max: 15 };
+};
 
 const registrationSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -13,30 +44,125 @@ const registrationSchema = z.object({
   phone: z.string().regex(/^[6-9]\d{9}$/, 'Enter a valid Indian mobile number'),
   college: z.string().min(3, 'College name required'),
   year: z.enum(['1st', '2nd', 'Final', 'Other']),
-  selectedEvents: z.array(z.string()).min(1, 'Choose at least one event'),
+  selectedEventId: z.string().min(1, 'Event ID is missing'),
+  teamName: z.string().optional(),
+  teamMembers: z.array(
+    z.object({
+      name: z.string().min(2, 'Name required'),
+      email: z.string().email('Valid email required'),
+      phone: z.string().regex(/^[6-9]\d{9}$/, 'Valid phone required')
+    })
+  ).optional(),
   transactionId: z.string().min(6, 'Enter a valid Transaction ID / UTR number (at least 6 characters)'),
+}).refine((data) => {
+  // If teamMembers array is not empty, teamName must be provided
+  if (data.teamMembers && data.teamMembers.length > 0) {
+    return !!data.teamName && data.teamName.trim().length > 0;
+  }
+  return true;
+}, {
+  message: "Team Name is required for team events",
+  path: ["teamName"]
 });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
 export const RegistrationModal: React.FC = () => {
-  const { isOpen, step, setStep, closeModal, reset, selectedEvents, toggleEvent, isDirectRegistration } = useRegistrationStore();
+  const { isOpen, step, setStep, closeModal, reset, selectedEventId } = useRegistrationStore();
   const modalRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  const { register, handleSubmit, formState: { errors }, trigger, setValue } = useForm<RegistrationFormData>({
+  const { register, control, handleSubmit, formState: { errors }, trigger, setValue } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
     defaultValues: {
       year: '1st',
-      selectedEvents: [],
+      selectedEventId: '',
+      teamName: '',
+      teamMembers: [],
       transactionId: ''
     }
   });
 
-  // Sync selected events with react-hook-form
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'teamMembers'
+  });
+
+  const event = events.find(e => e.id === selectedEventId);
+  const { isSolo, min, max } = getTeamDetails(selectedEventId);
+  const [teamSize, setTeamSize] = useState<number>(1);
+  const [teamSizeInput, setTeamSizeInput] = useState<string>('1');
+  const [teamSizeError, setTeamSizeError] = useState<string | null>(null);
+
+  const handleTeamSizeChange = (newSize: number) => {
+    setTeamSize(newSize);
+    
+    const currentLength = fields.length;
+    const targetLength = newSize - 1; // excluding leader
+    
+    if (currentLength < targetLength) {
+      const diff = targetLength - currentLength;
+      for (let i = 0; i < diff; i++) {
+        append({ name: '', email: '', phone: '' });
+      }
+    } else if (currentLength > targetLength) {
+      const indicesToRemove = [];
+      for (let i = targetLength; i < currentLength; i++) {
+        indicesToRemove.push(i);
+      }
+      remove(indicesToRemove);
+    }
+  };
+
+  const handleTeamSizeInputChange = (val: string) => {
+    setTeamSizeInput(val);
+    
+    if (val === '') {
+      setTeamSizeError(`Team size is required (Min: ${min}, Max: ${max})`);
+      return;
+    }
+    
+    const parsed = parseInt(val, 10);
+    if (isNaN(parsed)) {
+      setTeamSizeError('Please enter a valid number');
+      return;
+    }
+    
+    if (parsed < min || parsed > max) {
+      setTeamSizeError(`Team size must be between ${min} and ${max}`);
+      return;
+    }
+    
+    setTeamSizeError(null);
+    handleTeamSizeChange(parsed);
+  };
+
+  // Sync selected event ID and initialize team members
   useEffect(() => {
-    setValue('selectedEvents', selectedEvents);
-  }, [selectedEvents, setValue]);
+    if (selectedEventId && isOpen) {
+      setValue('selectedEventId', selectedEventId);
+      
+      const { isSolo: soloCheck, min: minSize } = getTeamDetails(selectedEventId);
+      if (!soloCheck) {
+        // Initialize with (minSize - 1) empty team members (registrant is the leader / member 1)
+        const initialMembers = Array.from({ length: minSize - 1 }, () => ({
+          name: '',
+          email: '',
+          phone: ''
+        }));
+        setValue('teamMembers', initialMembers);
+        setTeamSize(minSize);
+        setTeamSizeInput(minSize.toString());
+        setTeamSizeError(null);
+      } else {
+        setValue('teamMembers', []);
+        setValue('teamName', '');
+        setTeamSize(1);
+        setTeamSizeInput('1');
+        setTeamSizeError(null);
+      }
+    }
+  }, [selectedEventId, setValue, isOpen]);
 
   useEffect(() => {
     if (isOpen && modalRef.current) {
@@ -47,25 +173,44 @@ export const RegistrationModal: React.FC = () => {
     }
   }, [isOpen]);
 
+  // Disable ScrollTrigger.normalizeScroll while modal is open so native
+  // overflow-y scrolling works inside the modal body container.
+  useEffect(() => {
+    if (isOpen) {
+      ScrollTrigger.normalizeScroll(false);
+    }
+    return () => {
+      if (isOpen) {
+        ScrollTrigger.normalizeScroll(true);
+      }
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleNext = async (currentStep: number) => {
     let isValid = false;
     if (currentStep === 1) {
-      isValid = await trigger(['name', 'email', 'phone', 'college', 'year']);
+      const isIdentityValid = await trigger(['name', 'email', 'phone', 'college', 'year']);
+      
+      let isTeamSizeValid = true;
+      if (!isSolo) {
+        const parsed = parseInt(teamSizeInput, 10);
+        if (isNaN(parsed) || parsed < min || parsed > max) {
+          setTeamSizeError(`Team size must be between ${min} and ${max}`);
+          isTeamSizeValid = false;
+        }
+      }
+      
+      isValid = isIdentityValid && isTeamSizeValid;
     } else if (currentStep === 2) {
-      isValid = await trigger(['selectedEvents']);
+      isValid = await trigger(['teamName', 'teamMembers']); // Validate roster
     }
 
     if (isValid) {
       const container = containerRef.current;
+      const nextStep = currentStep + 1; // Simple linear progression
       
-      // LOGIC UPDATE: Skip Step 2 if direct registration
-      let nextStep = currentStep + 1;
-      if (currentStep === 1 && isDirectRegistration) {
-        nextStep = 3;
-      }
-
       if (container) {
         gsap.to(container, { x: '-20px', opacity: 0, duration: 0.2, ease: 'power2.in', onComplete: () => {
           setStep(nextStep);
@@ -79,12 +224,7 @@ export const RegistrationModal: React.FC = () => {
 
   const handleBack = (currentStep: number) => {
     const container = containerRef.current;
-    
-    // LOGIC UPDATE: Skip Step 2 going backward if direct registration
-    let prevStep = currentStep - 1;
-    if (currentStep === 3 && isDirectRegistration) {
-      prevStep = 1;
-    }
+    const prevStep = currentStep - 1; // Simple linear regression
 
     if (container) {
       gsap.to(container, { x: '20px', opacity: 0, duration: 0.2, ease: 'power2.in', onComplete: () => {
@@ -102,8 +242,6 @@ export const RegistrationModal: React.FC = () => {
     alert("Registration successful! The Castle awaits your arrival.");
   };
 
-  const nonPlaceholderEvents = events.filter(e => !e.isPlaceholder);
-
   return (
     <div className="fixed inset-0 z-[1000] flex items-end md:items-center justify-center pointer-events-auto">
       {/* Backdrop */}
@@ -115,7 +253,7 @@ export const RegistrationModal: React.FC = () => {
         className="relative w-full md:max-w-[560px] max-h-[90vh] md:max-h-[85vh] bg-stone-mid border-t md:border border-gold/20 rounded-t-xl md:rounded-[3px] shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col"
       >
         {/* Header */}
-        <div className="flex-shrink-0 border-b border-gold/10 px-6 py-4 flex items-center justify-between bg-stone">
+        <div className="relative z-10 border-b border-gold/10 px-6 py-4 flex items-center justify-between bg-stone shrink-0">
           <h2 className="font-display font-semibold text-gold tracking-widest uppercase">Enter the Registry</h2>
           <button onClick={closeModal} className="text-text-ghost hover:text-crimson transition-colors">
             <X size={24} />
@@ -123,7 +261,7 @@ export const RegistrationModal: React.FC = () => {
         </div>
 
         {/* Progress Bar */}
-        <div className="flex-shrink-0 h-1 bg-void w-full relative">
+        <div className="relative z-10 h-1 bg-void w-full shrink-0">
           <div 
             className="absolute top-0 left-0 h-full bg-gold transition-all duration-500 ease-out" 
             style={{ width: `${(step / 3) * 100}%` }} 
@@ -131,7 +269,7 @@ export const RegistrationModal: React.FC = () => {
         </div>
 
         {/* Body */}
-        <div className="flex-grow overflow-y-auto px-6 py-6" ref={containerRef}>
+        <div className="overflow-y-auto px-6 py-6 min-h-0 flex-1" ref={containerRef}>
           <form id="regForm" onSubmit={handleSubmit(onSubmit)}>
             
             {/* STEP 1: IDENTITY */}
@@ -173,38 +311,128 @@ export const RegistrationModal: React.FC = () => {
                     </select>
                   </div>
                 </div>
+
+                {/* Team Size Selection for Team Events */}
+                {!isSolo && (
+                  <div className="border-t border-gold/10 pt-4 mt-2">
+                    {min === max ? (
+                      <div>
+                        <label className="block font-body text-text-ghost text-sm mb-1">Team Size</label>
+                        <div className="w-full bg-void/50 border border-stone-mid/50 px-4 py-3 rounded-[2px] text-gold font-semibold text-sm">
+                          Fixed at {min} members (including you)
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="block font-body text-text-ghost text-sm mb-1">Total Team Size (including you) *</label>
+                        <input 
+                          type="number"
+                          min={min}
+                          max={max}
+                          value={teamSizeInput}
+                          onChange={(e) => handleTeamSizeInputChange(e.target.value)}
+                          className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors"
+                          placeholder={`Enter size (${min}-${max})`}
+                        />
+                        {teamSizeError ? (
+                          <p className="text-crimson text-xs mt-1">{teamSizeError}</p>
+                        ) : (
+                          <p className="font-body text-xs text-text-ghost mt-1">
+                            Please enter how many members will be in your team (between {min} and {max}).
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
-            {/* STEP 2: EVENTS */}
+            {/* STEP 2: TEAM ROSTER */}
             {step === 2 && (
-              <div>
-                <h3 className="font-heading text-xl text-text-primary mb-4">2. Choose Your District</h3>
-                {errors.selectedEvents && <p className="text-crimson text-sm mb-4 bg-crimson/10 p-2 rounded">{errors.selectedEvents.message}</p>}
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-                  {nonPlaceholderEvents.map(event => {
-                    const isSelected = selectedEvents.includes(event.id);
-                    return (
-                      <div 
-                        key={event.id}
-                        onClick={() => toggleEvent(event.id)}
-                        className={`relative p-3 border rounded-[2px] cursor-pointer transition-all ${
-                          isSelected ? 'border-crimson bg-crimson/10' : 'border-stone-mid bg-void hover:border-gold/30'
-                        }`}
-                      >
-                        {isSelected && (
-                          <div className="absolute top-2 right-2 text-crimson">
-                            <Check size={16} />
-                          </div>
-                        )}
-                        <span className="text-[10px] uppercase text-gold tracking-widest block mb-1">{event.category}</span>
-                        <h4 className="font-heading text-text-primary text-sm mb-1">{event.name}</h4>
-                        <p className="font-body text-[11px] text-text-ghost">{event.teamSize} &middot; {event.duration}</p>
-                      </div>
-                    );
-                  })}
+              <div className="space-y-4">
+                <div className="mb-4">
+                  <span className="text-[10px] uppercase text-gold tracking-widest block mb-1">{event?.category}</span>
+                  <h3 className="font-heading text-xl text-text-primary">2. Team Roster ({event?.name})</h3>
+                  <p className="font-body text-xs text-text-ghost mt-1">
+                    {isSolo 
+                      ? 'This is a Solo/Singles event. No additional team members are required.' 
+                      : `Minimum team size: ${min}, maximum: ${max} members (including you).`
+                    }
+                  </p>
                 </div>
+
+                {isSolo ? (
+                  <div className="border border-stone-mid/30 bg-void/50 p-6 rounded-[2px] text-center">
+                    <p className="font-body text-text-body text-sm mb-2">You are registered as a Solo warrior.</p>
+                    <span className="font-heading text-gold text-xs tracking-widest uppercase">Click CONTINUE to proceed</span>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block font-body text-text-ghost text-sm mb-1">Team Name *</label>
+                      <input 
+                        {...register('teamName')} 
+                        className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" 
+                        placeholder="Enter your team name" 
+                      />
+                      {errors.teamName && <p className="text-crimson text-xs mt-1">{errors.teamName.message}</p>}
+                    </div>
+
+                    <div className="border-t border-gold/10 pt-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="font-heading text-gold text-xs tracking-widest uppercase">Team Members (Excluding you)</span>
+                        <span className="text-text-ghost text-xs font-body">Roster: {fields.length + 1} / {teamSize}</span>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        {fields.map((field, index) => (
+                          <div key={field.id} className="p-4 border border-stone-mid/30 bg-void/50 rounded-[2px] space-y-3 relative">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-heading text-gold text-xs tracking-widest uppercase">Member {index + 2}</h4>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                              <div>
+                                <label className="block font-body text-text-ghost text-xs mb-1">Name</label>
+                                <input 
+                                  {...register(`teamMembers.${index}.name` as const)} 
+                                  className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-3 py-2 rounded-[2px] text-text-primary text-sm transition-colors" 
+                                  placeholder="Name" 
+                                />
+                                {errors.teamMembers?.[index]?.name && (
+                                  <p className="text-crimson text-[10px] mt-1">{errors.teamMembers[index]?.name?.message}</p>
+                                )}
+                              </div>
+                              <div>
+                                <label className="block font-body text-text-ghost text-xs mb-1">Email</label>
+                                <input 
+                                  type="email"
+                                  {...register(`teamMembers.${index}.email` as const)} 
+                                  className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-3 py-2 rounded-[2px] text-text-primary text-sm transition-colors" 
+                                  placeholder="Email" 
+                                />
+                                {errors.teamMembers?.[index]?.email && (
+                                  <p className="text-crimson text-[10px] mt-1">{errors.teamMembers[index]?.email?.message}</p>
+                                )}
+                              </div>
+                              <div>
+                                <label className="block font-body text-text-ghost text-xs mb-1">Phone</label>
+                                <input 
+                                  {...register(`teamMembers.${index}.phone` as const)} 
+                                  className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-3 py-2 rounded-[2px] text-text-primary text-sm transition-colors" 
+                                  placeholder="Phone" 
+                                />
+                                {errors.teamMembers?.[index]?.phone && (
+                                  <p className="text-crimson text-[10px] mt-1">{errors.teamMembers[index]?.phone?.message}</p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -212,8 +440,13 @@ export const RegistrationModal: React.FC = () => {
             {step === 3 && (
               <div className="text-center py-4">
                 <h3 className="font-display text-2xl text-gold mb-2">Seal Your Entry</h3>
-                <p className="font-body text-text-body mb-6 text-sm">Scan the sigil below to pay the registration fee.</p>
+                <p className="font-body text-text-body mb-4 text-sm">Scan the sigil below to pay the registration fee.</p>
                 
+                <div className="mb-4 bg-void/30 border border-gold/10 p-3 rounded-[2px] inline-block">
+                  <span className="font-body text-text-ghost text-xs block mb-1">TOTAL AMOUNT DUE</span>
+                  <span className="font-heading text-crimson text-xl font-bold">{event?.fee}</span>
+                </div>
+
                 <div className="flex flex-col items-center mb-6">
                   {/* --- QR CODE PLACEHOLDER --- */}
                   <div className="w-48 h-48 border-2 border-dashed border-gold/40 rounded-[2px] p-2 flex items-center justify-center bg-stone-mid/20">
@@ -240,7 +473,7 @@ export const RegistrationModal: React.FC = () => {
         </div>
 
         {/* Footer Actions */}
-        <div className="flex-shrink-0 border-t border-gold/10 p-4 bg-stone flex gap-4">
+        <div className="relative z-10 border-t border-gold/10 p-4 bg-stone flex gap-4 shrink-0">
           {step > 1 && (
             <button 
               type="button" 

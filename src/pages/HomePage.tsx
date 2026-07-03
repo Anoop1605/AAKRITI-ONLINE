@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigationType } from 'react-router-dom';
 import { Hero } from '../components/Hero';
 import { CategoryDiscovery } from '../components/CategoryDiscovery';
 import { SectionDivider } from '../components/SectionDivider';
@@ -10,8 +10,11 @@ import { events, categories } from '../data/events';
 
 export const HomePage = () => {
   const location = useLocation();
+  const navType = useNavigationType();
 
   useEffect(() => {
+    if (navType === 'POP') return;
+
     if (location.hash) {
       const id = location.hash.replace('#', '');
       const element = document.getElementById(id);
@@ -23,7 +26,7 @@ export const HomePage = () => {
         return () => clearTimeout(timer);
       }
     }
-  }, [location.hash]);
+  }, [location.hash, navType]);
 
   const sportsEvents = events.filter(e => e.category === 'sports');
   const culturalEvents = events.filter(e => e.category === 'cultural');
