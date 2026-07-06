@@ -15,6 +15,10 @@ const getTeamDetails = (eventId: string | null) => {
   
   const size = event.teamSize.toLowerCase();
   
+  if (size.includes('singles / doubles') || size.includes('singles/doubles')) {
+    return { isSolo: false, min: 1, max: 2 };
+  }
+  
   if (size.includes('solo') || size === '1v1' || size === 'singles') {
     return { isSolo: true, min: 1, max: 1 };
   }
@@ -48,12 +52,9 @@ const registrationSchema = z.object({
   teamName: z.string().optional(),
   teamMembers: z.array(
     z.object({
-      name: z.string().min(2, 'Name required'),
-      email: z.string().email('Valid email required'),
-      phone: z.string().regex(/^[6-9]\d{9}$/, 'Valid phone required')
+      name: z.string().min(2, 'Name required')
     })
   ).optional(),
-  transactionId: z.string().min(6, 'Enter a valid Transaction ID / UTR number (at least 6 characters)'),
 }).refine((data) => {
   // If teamMembers array is not empty, teamName must be provided
   if (data.teamMembers && data.teamMembers.length > 0) {
@@ -79,7 +80,6 @@ export const RegistrationModal: React.FC = () => {
       selectedEventId: '',
       teamName: '',
       teamMembers: [],
-      transactionId: ''
     }
   });
 
@@ -94,6 +94,10 @@ export const RegistrationModal: React.FC = () => {
   const [teamSizeInput, setTeamSizeInput] = useState<string>('1');
   const [teamSizeError, setTeamSizeError] = useState<string | null>(null);
 
+  const [screenshot, setScreenshot] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const handleTeamSizeChange = (newSize: number) => {
     setTeamSize(newSize);
     
@@ -103,7 +107,7 @@ export const RegistrationModal: React.FC = () => {
     if (currentLength < targetLength) {
       const diff = targetLength - currentLength;
       for (let i = 0; i < diff; i++) {
-        append({ name: '', email: '', phone: '' });
+        append({ name: '' });
       }
     } else if (currentLength > targetLength) {
       const indicesToRemove = [];
@@ -146,9 +150,7 @@ export const RegistrationModal: React.FC = () => {
       if (!soloCheck) {
         // Initialize with (minSize - 1) empty team members (registrant is the leader / member 1)
         const initialMembers = Array.from({ length: minSize - 1 }, () => ({
-          name: '',
-          email: '',
-          phone: ''
+          name: ''
         }));
         setValue('teamMembers', initialMembers);
         setTeamSize(minSize);
@@ -236,10 +238,67 @@ export const RegistrationModal: React.FC = () => {
     }
   };
 
-  const onSubmit = (data: RegistrationFormData) => {
-    console.log('Registration Submitted:', data);
-    reset();
-    alert("Registration successful! The Castle awaits your arrival.");
+  const onSubmit = async (data: RegistrationFormData) => {
+    if (!screenshot) {
+      setSubmitError('Please upload your payment screenshot.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const payload = new FormData();
+      payload.append('teamName', data.teamName || '');
+      
+      // Map category
+      let categoryVal = 'SPORTS';
+      if (event?.category === 'cultural') {
+        categoryVal = 'CULTURALS';
+      } else if (event?.category === 'management') {
+        categoryVal = 'MANAGEMENT';
+      }
+      payload.append('category', categoryVal);
+      payload.append('eventName', event?.name || '');
+      payload.append('leaderName', data.name);
+      payload.append('leaderEmail', data.email);
+      payload.append('leaderPhone', data.phone);
+      payload.append('collegeName', data.college);
+
+      // Map year
+      let yearVal = '1';
+      if (data.year === '2nd') yearVal = '2';
+      else if (data.year === 'Final') yearVal = '3';
+      else if (data.year === 'Other') yearVal = '4';
+      payload.append('yearOfStudy', yearVal);
+
+      // Join team members
+      const memberNames = data.teamMembers
+        ? data.teamMembers.map(m => m.name).filter(Boolean).join(', ')
+        : '';
+      payload.append('memberNames', memberNames);
+      payload.append('screenshot', screenshot);
+
+      const baseApiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
+      const response = await fetch(`${baseApiUrl}/api/v1/registrations`, {
+        method: 'POST',
+        body: payload
+      });
+
+      if (response.status === 201) {
+        reset();
+        setScreenshot(null);
+        alert("Registration successful! The Castle awaits your arrival.");
+        closeModal();
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        setSubmitError(errorData.error || 'Failed to submit registration. Please try again.');
+      }
+    } catch (err: any) {
+      setSubmitError('Network error or backend is not running.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -369,68 +428,49 @@ export const RegistrationModal: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div>
-                      <label className="block font-body text-text-ghost text-sm mb-1">Team Name *</label>
-                      <input 
-                        {...register('teamName')} 
-                        className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" 
-                        placeholder="Enter your team name" 
-                      />
-                      {errors.teamName && <p className="text-crimson text-xs mt-1">{errors.teamName.message}</p>}
-                    </div>
-
-                    <div className="border-t border-gold/10 pt-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="font-heading text-gold text-xs tracking-widest uppercase">Team Members (Excluding you)</span>
-                        <span className="text-text-ghost text-xs font-body">Roster: {fields.length + 1} / {teamSize}</span>
+                    {teamSize > 1 && (
+                      <div>
+                        <label className="block font-body text-text-ghost text-sm mb-1">Team Name *</label>
+                        <input 
+                          {...register('teamName')} 
+                          className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors" 
+                          placeholder="Enter your team name" 
+                        />
+                        {errors.teamName && <p className="text-crimson text-xs mt-1">{errors.teamName.message}</p>}
                       </div>
-                      
-                      <div className="space-y-3">
-                        {fields.map((field, index) => (
-                          <div key={field.id} className="p-4 border border-stone-mid/30 bg-void/50 rounded-[2px] space-y-3 relative">
-                            <div className="flex items-center justify-between">
-                              <h4 className="font-heading text-gold text-xs tracking-widest uppercase">Member {index + 2}</h4>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    )}
+
+                    {teamSize === 1 ? (
+                      <div className="border border-stone-mid/30 bg-void/50 p-6 rounded-[2px] text-center">
+                        <p className="font-body text-text-body text-sm mb-2">You are registered as a Singles entry.</p>
+                        <span className="font-heading text-gold text-xs tracking-widest uppercase">Click CONTINUE to proceed</span>
+                      </div>
+                    ) : (
+                      <div className="border-t border-gold/10 pt-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="font-heading text-gold text-xs tracking-widest uppercase">Team Members (Excluding you)</span>
+                          <span className="text-text-ghost text-xs font-body">Roster: {fields.length + 1} / {teamSize}</span>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          {fields.map((field, index) => (
+                            <div key={field.id} className="p-4 border border-stone-mid/30 bg-void/50 rounded-[2px] space-y-3 relative">
                               <div>
-                                <label className="block font-body text-text-ghost text-xs mb-1">Name</label>
+                                <label className="block font-body text-text-ghost text-xs mb-1">Member {index + 2} Name</label>
                                 <input 
                                   {...register(`teamMembers.${index}.name` as const)} 
-                                  className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-3 py-2 rounded-[2px] text-text-primary text-sm transition-colors" 
-                                  placeholder="Name" 
+                                  className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary text-sm transition-colors" 
+                                  placeholder={`Enter member ${index + 2} name`} 
                                 />
                                 {errors.teamMembers?.[index]?.name && (
                                   <p className="text-crimson text-[10px] mt-1">{errors.teamMembers[index]?.name?.message}</p>
                                 )}
                               </div>
-                              <div>
-                                <label className="block font-body text-text-ghost text-xs mb-1">Email</label>
-                                <input 
-                                  type="email"
-                                  {...register(`teamMembers.${index}.email` as const)} 
-                                  className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-3 py-2 rounded-[2px] text-text-primary text-sm transition-colors" 
-                                  placeholder="Email" 
-                                />
-                                {errors.teamMembers?.[index]?.email && (
-                                  <p className="text-crimson text-[10px] mt-1">{errors.teamMembers[index]?.email?.message}</p>
-                                )}
-                              </div>
-                              <div>
-                                <label className="block font-body text-text-ghost text-xs mb-1">Phone</label>
-                                <input 
-                                  {...register(`teamMembers.${index}.phone` as const)} 
-                                  className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-3 py-2 rounded-[2px] text-text-primary text-sm transition-colors" 
-                                  placeholder="Phone" 
-                                />
-                                {errors.teamMembers?.[index]?.phone && (
-                                  <p className="text-crimson text-[10px] mt-1">{errors.teamMembers[index]?.phone?.message}</p>
-                                )}
-                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -458,14 +498,19 @@ export const RegistrationModal: React.FC = () => {
                 </div>
 
                 <div className="w-full text-left mb-6">
-                  <label className="block font-body text-text-ghost text-sm mb-1">Transaction ID / UTR Number *</label>
+                  <label className="block font-body text-text-ghost text-sm mb-1">Payment Screenshot *</label>
                   <input 
-                    type="text" 
-                    {...register('transactionId')}
-                    className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors uppercase" 
-                    placeholder="e.g. 312345678901" 
+                    type="file" 
+                    accept="image/*"
+                    required
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        setScreenshot(e.target.files[0]);
+                      }
+                    }}
+                    className="w-full bg-void border border-stone-mid focus:border-crimson outline-none px-4 py-3 rounded-[2px] text-text-primary transition-colors file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-gold file:text-void hover:file:bg-gold-bright file:cursor-pointer" 
                   />
-                  {errors.transactionId && <p className="text-crimson text-xs mt-1">{errors.transactionId.message}</p>}
+                  {submitError && <p className="text-crimson text-xs mt-1">{submitError}</p>}
                 </div>
               </div>
             )}
@@ -495,9 +540,12 @@ export const RegistrationModal: React.FC = () => {
             <button 
               form="regForm"
               type="submit"
-              className="flex-1 bg-crimson hover:bg-crimson-hi text-text-primary font-heading font-semibold tracking-widest text-sm py-3 rounded-[2px] transition-colors shadow-[0_0_20px_rgba(192,57,43,0.3)]"
+              disabled={isSubmitting}
+              className={`flex-1 font-heading font-semibold tracking-widest text-sm py-3 rounded-[2px] transition-colors ${
+                isSubmitting ? 'bg-stone-mid text-text-ghost cursor-not-allowed' : 'bg-crimson hover:bg-crimson-hi text-text-primary shadow-[0_0_20px_rgba(192,57,43,0.3)]'
+              }`}
             >
-              IGNITE YOUR ENTRY
+              {isSubmitting ? 'SEALING...' : 'IGNITE YOUR ENTRY'}
             </button>
           )}
         </div>

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavbarAnimation } from '../hooks/animations/useNavbarAnimation';
 import { Menu, X, ArrowLeft } from 'lucide-react';
-import { gsap } from '../lib/gsap';
+import { gsap, ScrollTrigger } from '../lib/gsap';
 import { useGSAP } from '@gsap/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRegistrationStore } from '../store/registrationStore';
@@ -36,11 +36,14 @@ AAKRITI 2026 where every challenge shapes a champion, and every creation tells a
   useEffect(() => {
     if (isAboutOpen) {
       document.body.style.overflow = 'hidden';
+      ScrollTrigger.normalizeScroll(false);
     } else {
       document.body.style.overflow = '';
+      ScrollTrigger.normalizeScroll(true);
     }
     return () => {
       document.body.style.overflow = '';
+      ScrollTrigger.normalizeScroll(true);
     };
   }, [isAboutOpen]);
 

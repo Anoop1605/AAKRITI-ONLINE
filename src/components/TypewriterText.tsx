@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface TypewriterTextProps {
   text: string;
@@ -6,9 +6,10 @@ interface TypewriterTextProps {
 
 const TypewriterText: React.FC<TypewriterTextProps> = ({ text }) => {
   const [displayedText, setDisplayedText] = useState('');
-  const bottomRef = useRef<HTMLDivElement>(null); // Anchor element reference
-  const isProgrammaticScrollRef = useRef(false);
-  const userScrolledUpRef = useRef(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const userHasScrolledRef = useRef(false);
+  const lastScrollTopRef = useRef(0);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Effect handles typing mechanism
   useEffect(() => {
@@ -37,59 +38,67 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({ text }) => {
     return () => clearTimeout(timeoutId);
   }, [text]);
 
-  // Handle scroll listener to detect manual scroll up vs bottom scroll
+  // Detect user-initiated scroll via wheel or touch events on the scroll container.
+  // We listen for wheel/touchmove instead of the 'scroll' event because 'scroll'
+  // fires for both programmatic and user scrolls and cannot reliably distinguish them.
+  const handleUserScroll = useCallback(() => {
+    userHasScrolledRef.current = true;
+
+    // Clear any existing timeout to debounce
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+  }, []);
+
+  // Track scroll position to detect when user scrolls back to bottom
+  const handleScrollPosition = useCallback(() => {
+    const scrollContainer = bottomRef.current?.closest('.overflow-y-auto');
+    if (!scrollContainer) return;
+
+    const isAtBottom =
+      scrollContainer.scrollHeight -
+      scrollContainer.scrollTop -
+      scrollContainer.clientHeight <= 80; // 80px threshold
+
+    if (isAtBottom && userHasScrolledRef.current) {
+      // User scrolled back to the bottom — re-enable auto-scroll
+      userHasScrolledRef.current = false;
+    }
+
+    lastScrollTopRef.current = scrollContainer.scrollTop;
+  }, []);
+
   useEffect(() => {
     const scrollContainer = bottomRef.current?.closest('.overflow-y-auto');
     if (!scrollContainer) return;
 
-    const handleScroll = () => {
-      if (isProgrammaticScrollRef.current) {
-        return; // Programmatically scrolled, ignore this scroll event
-      }
+    // Listen for direct user input events
+    scrollContainer.addEventListener('wheel', handleUserScroll, { passive: true });
+    scrollContainer.addEventListener('touchmove', handleUserScroll, { passive: true });
+    // Track position on any scroll (to detect return-to-bottom)
+    scrollContainer.addEventListener('scroll', handleScrollPosition, { passive: true });
 
-      // Check if user is near the bottom
-      const isAtBottom =
-        scrollContainer.scrollHeight -
-        scrollContainer.scrollTop -
-        scrollContainer.clientHeight <= 120; // 120px threshold
-
-      if (isAtBottom) {
-        userScrolledUpRef.current = false;
-      } else {
-        userScrolledUpRef.current = true;
-      }
-    };
-
-    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      scrollContainer.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  // Effect handles auto-scrolling to the active typed area
-  useEffect(() => {
-    if (bottomRef.current && !userScrolledUpRef.current) {
-      const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
-      if (scrollContainer) {
-        isProgrammaticScrollRef.current = true;
-        bottomRef.current.scrollIntoView({
-          behavior: 'auto', // Omit smooth scroll to prevent layout stutter/easing fight
-          block: 'nearest',
-        });
-        
-        // Reset the programmatic scroll flag on the next tick
-        const timer = setTimeout(() => {
-          isProgrammaticScrollRef.current = false;
-        }, 50);
-        return () => clearTimeout(timer);
-      } else {
-        bottomRef.current.scrollIntoView({
-          behavior: 'auto',
-          block: 'nearest',
-        });
+      scrollContainer.removeEventListener('wheel', handleUserScroll);
+      scrollContainer.removeEventListener('touchmove', handleUserScroll);
+      scrollContainer.removeEventListener('scroll', handleScrollPosition);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
       }
+    };
+  }, [handleUserScroll, handleScrollPosition]);
+
+  // Auto-scroll to the bottom as text types — but only when the user
+  // hasn't manually scrolled away.
+  useEffect(() => {
+    if (!bottomRef.current || userHasScrolledRef.current) return;
+
+    const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
+    if (scrollContainer) {
+      // Use scrollTop assignment for instant, non-interruptive scrolling
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
     }
-  }, [displayedText]); // Fires every single time a character types out
+  }, [displayedText]);
 
   return (
     <div className="text-text-primary text-xl md:text-2xl leading-relaxed font-body whitespace-pre-wrap selection:bg-crimson selection:text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
