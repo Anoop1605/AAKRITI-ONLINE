@@ -23,7 +23,7 @@ export const events: Event[] = [
   // === SPORTS (THE BREATHING DISTRICTS) ===
   {
     id: 'sp-01', 
-    name: 'Throwball', 
+    name: 'STONE BREATHING (Throwball)', 
     category: 'sports',
     districtName: 'Stone Breathing District',
     districtTheme: 'card-stone',
@@ -47,7 +47,7 @@ export const events: Event[] = [
   },
   {
     id: 'sp-02', 
-    name: 'Volleyball', 
+    name: 'WIND BREATHING (Volleyball)', 
     category: 'sports',
     districtName: 'Wind Breathing District',
     districtTheme: 'card-wind',
@@ -70,7 +70,7 @@ export const events: Event[] = [
   },
   {
     id: 'sp-03', 
-    name: 'Carrom', 
+    name: 'SHADOW BREATHING (Carrom)', 
     category: 'sports',
     districtName: 'Shadow Breathing District',
     districtTheme: 'card-shadow',
@@ -94,7 +94,7 @@ export const events: Event[] = [
   },
   {
     id: 'sp-07', 
-    name: 'Tug of War', 
+    name: 'UNBREAKABLE GRIP (Tug of War)', 
     category: 'sports',
     districtName: 'Unbreakable Grip District',
     districtTheme: 'card-tug', 
@@ -118,7 +118,7 @@ export const events: Event[] = [
   },
   {
     id: 'sp-08', 
-    name: 'Cricket', 
+    name: 'SUPREME ARENA (Cricket)', 
     category: 'sports',
     districtName: 'Supreme Arena District',
     districtTheme: 'card-cricket', 
@@ -145,7 +145,7 @@ export const events: Event[] = [
   // === CULTURAL (THE FESTIVAL REALMS) ===
   {
     id: 'cu-01', 
-    name: 'Bold and Beauty', 
+    name: 'BOLD AND BEAUTY (Fashion Show)', 
     category: 'cultural',
     districtName: 'District of Elegance',
     districtTheme: 'card-elegance',
@@ -168,7 +168,7 @@ export const events: Event[] = [
   },
   {
     id: 'cu-02', 
-    name: 'Duo Nichiren', 
+    name: 'DUO NICHIREN (Duet Dance)', 
     category: 'cultural',
     districtName: 'Moonlight Courtyard',
     districtTheme: 'card-moonlight',
@@ -192,7 +192,7 @@ export const events: Event[] = [
   },
   {
     id: 'cu-03', 
-    name: 'Stepfinity', 
+    name: 'STEPFINITY (Group Dance)', 
     category: 'cultural',
     districtName: 'Performance Plaza',
     districtTheme: 'card-plaza',
@@ -216,7 +216,7 @@ export const events: Event[] = [
   },
   {
     id: 'cu-04', 
-    name: 'Castle Decode', 
+    name: 'CASTLE DECODE (Treasure Hunt)', 
     category: 'cultural',
     districtName: 'The Hidden Path',
     districtTheme: 'card-path',
@@ -240,7 +240,7 @@ export const events: Event[] = [
   },
   {
     id: 'cu-05', 
-    name: 'Echoes of Aakriti', 
+    name: 'ECHOES OF AAKRITI (Short Film)', 
     category: 'cultural',
     districtName: 'Chronicles Studio',
     districtTheme: 'card-studio',
@@ -263,7 +263,7 @@ export const events: Event[] = [
   },
   {
     id: 'cu-06', 
-    name: 'Free Fire', 
+    name: 'THE GAMING REALM (Free Fire)', 
     category: 'cultural',
     districtName: 'The Gaming Realm',
     districtTheme: 'card-gaming',
@@ -289,7 +289,7 @@ export const events: Event[] = [
   // === MANAGEMENT (THE COUNCIL GROUNDS) ===
   {
     id: 'mg-01', 
-    name: 'Archives of Hashira', 
+    name: 'ARCHIVES OF HASHIRA (Business Quiz)', 
     category: 'management',
     districtName: 'The Council Chamber',
     districtTheme: 'card-council',
@@ -311,7 +311,7 @@ export const events: Event[] = [
   },
   {
     id: 'mg-02', 
-    name: 'Brand Slayer', 
+    name: 'BRAND SLAYER (Ads Creation)', 
     category: 'management',
     districtName: 'The Market Quarter',
     districtTheme: 'card-market',
@@ -335,7 +335,7 @@ export const events: Event[] = [
   },
   {
     id: 'mg-03', 
-    name: 'The Final Selection', 
+    name: 'THE FINAL SELECTION (Best Manager)', 
     category: 'management',
     districtName: 'The Dojo of Words',
     districtTheme: 'card-dojo',
@@ -357,7 +357,7 @@ export const events: Event[] = [
   },
   {
     id: 'mg-04', 
-    name: 'Gold Pulse', 
+    name: 'GOLD PULSE (Finance)', 
     category: 'management',
     districtName: 'The Treasury Vault',
     districtTheme: 'card-vault',
@@ -380,7 +380,7 @@ export const events: Event[] = [
   },
   {
     id: 'mg-05', 
-    name: 'Insights of Fortune', 
+    name: 'INSIGHTS OF FORTUNE (Business Analytics)', 
     category: 'management',
     districtName: 'The Innovation Quarter',
     districtTheme: 'card-innovation',
@@ -404,7 +404,7 @@ export const events: Event[] = [
   },
   {
     id: 'mg-06', 
-    name: 'Vault Quest', 
+    name: 'VAULT QUEST (Vault Quest)', 
     category: 'management',
     districtName: 'The Shifting Gates',
     districtTheme: 'card-gaming',
