@@ -98,6 +98,29 @@ export const RegistrationModal: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        (window.innerWidth <= 768)
+      );
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const getNumericFee = (feeStr: string | undefined): string => {
+    if (!feeStr) return '0';
+    const match = feeStr.replace(/,/g, '').match(/\d+/);
+    return match ? match[0] : '0';
+  };
+
+  const feeAmount = getNumericFee(event?.fee);
+  const upiLink = `upi://pay?pa=sfgc10701@iob&pn=AAKRITI%20SIMS&am=${feeAmount}&cu=INR&tn=AAKRITI%20Registration`;
+
   const handleTeamSizeChange = (newSize: number) => {
     setTeamSize(newSize);
     
@@ -488,13 +511,24 @@ export const RegistrationModal: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col items-center mb-6">
-                  {/* --- QR CODE PLACEHOLDER --- */}
-                  <div className="w-48 h-48 border-2 border-dashed border-gold/40 rounded-[2px] p-2 flex items-center justify-center bg-stone-mid/20">
-                    <span className="font-body text-text-ghost text-xs text-center tracking-widest">
-                      QR CODE<br/>PLACEHOLDER
-                    </span>
+                  {/* QR Code Image */}
+                  <div className="w-48 h-48 border border-gold/20 rounded-[2px] p-2 flex items-center justify-center bg-stone-mid/20">
+                    <img 
+                      src="/qr-code.png" 
+                      alt="Payment QR Code" 
+                      className="w-full h-full object-contain"
+                    />
                   </div>
-                  <span className="font-mono text-gold mt-2 text-xs">UPI: aakriti2026@bank</span>
+                  <span className="font-mono text-gold mt-2 text-xs">UPI: sfgc10701@iob</span>
+
+                  {isMobile && (
+                    <a 
+                      href={upiLink}
+                      className="mt-4 px-6 py-2.5 bg-gold hover:bg-gold-bright text-void font-heading font-semibold text-xs tracking-widest uppercase rounded-[2px] transition-colors inline-block"
+                    >
+                      Proceed to pay
+                    </a>
+                  )}
                 </div>
 
                 <div className="w-full text-left mb-6">
