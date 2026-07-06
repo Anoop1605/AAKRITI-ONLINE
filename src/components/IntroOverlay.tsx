@@ -299,7 +299,7 @@ export const IntroOverlay: React.FC = () => {
 
           <div className="relative z-[10] flex flex-col items-center gap-0 text-center select-none">
             <div ref={eyebrowRef} className="font-heading text-[11px] tracking-[0.5em] text-[#8B5E1A] uppercase opacity-0 translate-y-2 transition-none mb-5">
-              SIMS · Dept. of MBA · Bengaluru
+              SMS · SFGC · Bengaluru
             </div>
             <div className="relative flex items-center gap-0">
               <div ref={slashLRef} className="h-px bg-gradient-to-r from-transparent via-[#D4A054] to-transparent mx-4 opacity-0 self-center shrink-0 transition-none" />
@@ -318,7 +318,7 @@ export const IntroOverlay: React.FC = () => {
               <div ref={slashRRef} className="h-px bg-gradient-to-r from-transparent via-[#D4A054] to-transparent mx-4 opacity-0 self-center shrink-0 transition-none" />
             </div>
             <div ref={subtitleRef} className="font-body italic text-[14px] tracking-[0.35em] text-[#A89880] opacity-0 mt-[18px] whitespace-nowrap">
-              SIMS Intercollegiate Fest · 2026
+              SMS Intercollegiate Fest · 2026
             </div>
             <div ref={taglineRef} className="font-heading text-[11px] tracking-[0.3em] text-[#C0392B] opacity-0 mt-[28px] uppercase">
               Enter the Castle. Prove Your Realm.
