@@ -26,9 +26,22 @@ const getTeamDetails = (eventId: string | null) => {
   if (size.includes('7v7')) return { isSolo: false, min: 7, max: 10 };
   if (size.includes('6v6')) return { isSolo: false, min: 6, max: 10 };
   if (size.includes('doubles')) return { isSolo: false, min: 2, max: 2 };
-  if (size.includes('8 pullers')) return { isSolo: false, min: 8, max: 8 };
-  if (size.includes('11 players')) return { isSolo: false, min: 11, max: 11 };
   
+  // Match "A + B members" (e.g. 10 + 2 members, 2 + 1 members)
+  const plusMatch = size.match(/(\d+)\s*\+\s*(\d+)/);
+  if (plusMatch) {
+    const a = parseInt(plusMatch[1], 10);
+    const b = parseInt(plusMatch[2], 10);
+    return { isSolo: false, min: a, max: a + b };
+  }
+  
+  // Match "A members", "A players", "A pullers" (e.g. 2 members, 4 members)
+  const wordMatch = size.match(/(\d+)\s*(members|players|pullers)/);
+  if (wordMatch) {
+    const a = parseInt(wordMatch[1], 10);
+    return { isSolo: false, min: a, max: a };
+  }
+
   const rangeMatch = size.match(/(\d+)\s*[-–]\s*(\d+)/);
   if (rangeMatch) {
     return { isSolo: false, min: parseInt(rangeMatch[1]), max: parseInt(rangeMatch[2]) };
@@ -56,8 +69,11 @@ const registrationSchema = z.object({
     })
   ).optional(),
 }).refine((data) => {
-  // If teamMembers array is not empty, teamName must be provided
-  if (data.teamMembers && data.teamMembers.length > 0) {
+  const { isSolo, min } = getTeamDetails(data.selectedEventId);
+  const hasMultipleMembers = min > 1 || (data.teamMembers && data.teamMembers.length > 0);
+  
+  // If it's a team event and has multiple members, teamName must be provided
+  if (!isSolo && hasMultipleMembers) {
     return !!data.teamName && data.teamName.trim().length > 0;
   }
   return true;
