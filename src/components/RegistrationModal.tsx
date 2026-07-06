@@ -514,7 +514,7 @@ export const RegistrationModal: React.FC = () => {
                   {/* QR Code Image */}
                   <div className="w-48 h-48 border border-gold/20 rounded-[2px] p-2 flex items-center justify-center bg-stone-mid/20">
                     <img 
-                      src="/qr-code.jpeg" 
+                      src="/qr-code.png" 
                       alt="Payment QR Code" 
                       className="w-full h-full object-contain"
                     />
