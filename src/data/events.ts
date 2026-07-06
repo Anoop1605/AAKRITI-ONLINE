@@ -23,7 +23,7 @@ export const events: Event[] = [
   // === SPORTS (THE BREATHING DISTRICTS) ===
   {
     id: 'sp-01', 
-    name: 'STONE BREATHING (Throwball)', 
+    name: 'Throwball', 
     category: 'sports',
     districtName: 'Stone Breathing District',
     districtTheme: 'card-stone',
@@ -47,7 +47,7 @@ export const events: Event[] = [
   },
   {
     id: 'sp-02', 
-    name: 'WIND BREATHING (Volleyball)', 
+    name: 'Volleyball', 
     category: 'sports',
     districtName: 'Wind Breathing District',
     districtTheme: 'card-wind',
@@ -70,7 +70,7 @@ export const events: Event[] = [
   },
   {
     id: 'sp-03', 
-    name: 'SHADOW BREATHING (Carrom)', 
+    name: 'Carrom', 
     category: 'sports',
     districtName: 'Shadow Breathing District',
     districtTheme: 'card-shadow',
@@ -94,7 +94,7 @@ export const events: Event[] = [
   },
   {
     id: 'sp-07', 
-    name: 'UNBREAKABLE GRIP (Tug of War)', 
+    name: 'Tug of War', 
     category: 'sports',
     districtName: 'Unbreakable Grip District',
     districtTheme: 'card-tug', 
@@ -118,7 +118,7 @@ export const events: Event[] = [
   },
   {
     id: 'sp-08', 
-    name: 'SUPREME ARENA (Cricket)', 
+    name: 'Cricket', 
     category: 'sports',
     districtName: 'Supreme Arena District',
     districtTheme: 'card-cricket', 
