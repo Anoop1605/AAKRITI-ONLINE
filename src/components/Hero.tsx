@@ -73,7 +73,7 @@ export const Hero: React.FC = () => {
           ref={eyebrowRef} 
           className="font-body italic text-text-body text-[clamp(12px,3vw,16px)] tracking-widest uppercase mb-10 md:mb-4 opacity-0"
         >
-          {DEPT_NAME} , {COLLEGE_NAME} , Inter-collegiate Fest
+          {DEPT_NAME} &bull; {COLLEGE_NAME} &bull;<br></br> Inter collegiate Fest
         </p>
 
         <div className="flex flex-col items-center justify-center space-y-1 mt-6 md:mt-0 mb-8 relative">

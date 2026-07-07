@@ -16,6 +16,12 @@ function AppContent() {
   useEffect(() => {
     // Quality checklist: "ScrollTrigger.normalizeScroll(true) called once in App.tsx"
     ScrollTrigger.normalizeScroll(true);
+
+    // Ping backend health check to wake/spin up the server
+    const baseApiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
+    fetch(`${baseApiUrl}/health`)
+      .then(() => console.log('Backend wake-up ping successful.'))
+      .catch((err) => console.warn('Backend wake-up ping failed:', err));
   }, []);
 
   return (

@@ -90,7 +90,7 @@ export const events: Event[] = [
     venue: 'College Auditorium',
     time: '20/07/2026, 11:00 AM',
     fee: '₹177 per entry',
-    contact: 'Prem Kumar S: 9110438565'
+    contact: 'Manoj Gowda DM: 8660229528'
   },
   {
     id: 'sp-07', 
@@ -104,7 +104,7 @@ export const events: Event[] = [
     duration: 'Best of 3 Pulls', 
     icon: 'Swords',
     rules: [
-      '8 active pullers per team. Max weight strictly enforced (e.g. Men: 640kg, Women: 480kg).',
+      '8 active pullers per team. Max weight strictly enforced (e.g. Men: 640kg max).',
       'Knockout brackets format, best of 3 pulls total.',
       'A pull is won when opponent’s closest rope marker crosses the center line on the ground.',
       'No Anchoring: Rope cannot be wrapped/tied around body (except safety rules for the end anchor).',
@@ -114,7 +114,7 @@ export const events: Event[] = [
     venue: 'College Ground',
     time: '20/07/2026, 12:00 PM',
     fee: '₹826 per team',
-    contact: 'Manoj Gowda D M: 8660229528'
+    contact: 'Rakesh Gowda: 9035766332'
   },
   {
     id: 'sp-08', 
@@ -142,10 +142,10 @@ export const events: Event[] = [
     contact: 'K A Adarsha: 7483975962'
   },
 
-  // === CULTURAL (THE FESTIVAL REALMS) ===
+  // === CULTURAL ===
   {
     id: 'cu-01', 
-    name: 'BOLD AND BEAUTY (Fashion Show)', 
+    name: 'Fashion Show', 
     category: 'cultural',
     districtName: 'District of Elegance',
     districtTheme: 'card-elegance',
@@ -164,11 +164,12 @@ export const events: Event[] = [
     ],
     venue: 'Auditorium',
     time: '21ST JULY 2026, 02:15 pm Onwards',
-    fee: '₹590'
+    fee: '₹590',
+    contact: 'Shobha: 8660510769 / Ganga: 7349184637'
   },
   {
     id: 'cu-02', 
-    name: 'DUO NICHIREN (Duet Dance)', 
+    name: 'Duet Dance', 
     category: 'cultural',
     districtName: 'Moonlight Courtyard',
     districtTheme: 'card-moonlight',
@@ -188,17 +189,18 @@ export const events: Event[] = [
     ],
     venue: 'Auditorium',
     time: '21ST JULY 2026, 10:45 am Onwards',
-    fee: '₹354'
+    fee: '₹354',
+    contact: 'Manasa: 6362882275 / Sandhya: 9342014301'
   },
   {
     id: 'cu-03', 
-    name: 'STEPFINITY (Group Dance)', 
+    name: 'Group Dance', 
     category: 'cultural',
     districtName: 'Performance Plaza',
     districtTheme: 'card-plaza',
     tagline: 'Many voices. One thunder.',
     description: 'Command the floor with clean choreography execution, synchronization, and power configurations.',
-    teamSize: '6 + 2 members', 
+    teamSize: '6 to 12 members', 
     duration: '4 + 2 mins', 
     icon: 'Radio',
     rules: [
@@ -212,11 +214,12 @@ export const events: Event[] = [
     ],
     venue: 'Auditorium',
     time: '21ST JULY 2026, 12:00 pm Onwards',
-    fee: '₹472'
+    fee: '₹472',
+    contact: 'Manasa: 6362882275 / Sandhya: 9342014301'
   },
   {
     id: 'cu-04', 
-    name: 'CASTLE DECODE (Treasure Hunt)', 
+    name: 'Treasure Hunt', 
     category: 'cultural',
     districtName: 'The Hidden Path',
     districtTheme: 'card-path',
@@ -236,11 +239,12 @@ export const events: Event[] = [
     ],
     venue: 'College Campus',
     time: '21ST JULY 2026, 11:30 am Onwards',
-    fee: '₹354'
+    fee: '₹354',
+    contact: 'Dhanush: 7676203483 / Pradeep: 9019872780'
   },
   {
     id: 'cu-05', 
-    name: 'ECHOES OF AAKRITI (Short Film)', 
+    name: 'Short Film', 
     category: 'cultural',
     districtName: 'Chronicles Studio',
     districtTheme: 'card-studio',
@@ -259,11 +263,12 @@ export const events: Event[] = [
     ],
     venue: 'Auditorium',
     time: '21ST JULY 2026, 09:45 am Onwards',
-    fee: '₹295'
+    fee: '₹295',
+    contact: 'Manish: 9108037448'
   },
   {
     id: 'cu-06', 
-    name: 'THE GAMING REALM (Free Fire)', 
+    name: 'Free Fire', 
     category: 'cultural',
     districtName: 'The Gaming Realm',
     districtTheme: 'card-gaming',
@@ -282,14 +287,15 @@ export const events: Event[] = [
       'The format and scoring rules will be announced prior to the event commencement.'
     ],
     venue: 'ROOM 207',
-    time: '21ST JULY 2026, 11:30 am Onwards',
-    fee: '₹295'
+    time: '21ST JULY 2026, 11:00 am Onwards',
+    fee: '₹295',
+    contact: 'Abhishek R: 9741094602 / Guru Prasad: 9141121214'
   },
 
-  // === MANAGEMENT (THE COUNCIL GROUNDS) ===
+  // === MANAGEMENT ===
   {
     id: 'mg-01', 
-    name: 'ARCHIVES OF HASHIRA (Business Quiz)', 
+    name: 'Business Quiz', 
     category: 'management',
     districtName: 'The Council Chamber',
     districtTheme: 'card-council',
@@ -307,11 +313,12 @@ export const events: Event[] = [
     ],
     venue: 'ROOM 107',
     time: '21ST JULY 2026, 11:00 am Onwards',
-    fee: '₹295'
+    fee: '₹295',
+    contact: 'Shravani: 7349692889 / Deepa Naik: 8217577739'
   },
   {
     id: 'mg-02', 
-    name: 'BRAND SLAYER (Ads Creation)', 
+    name: 'Ads Creation', 
     category: 'management',
     districtName: 'The Market Quarter',
     districtTheme: 'card-market',
@@ -331,11 +338,12 @@ export const events: Event[] = [
     ],
     venue: 'Sabhangana',
     time: '21ST JULY 2026, 11:00 am Onwards',
-    fee: '₹295'
+    fee: '₹295',
+    contact: 'Yogesh: 7483074632 / Keerthi Reddy: 6360920971'
   },
   {
     id: 'mg-03', 
-    name: 'THE FINAL SELECTION (Best Manager)', 
+    name: 'Best Manager', 
     category: 'management',
     districtName: 'The Dojo of Words',
     districtTheme: 'card-dojo',
@@ -353,11 +361,12 @@ export const events: Event[] = [
     ],
     venue: 'ROOM 105',
     time: '21ST JULY 2026, 11:00 am Onwards',
-    fee: '₹118'
+    fee: '₹118',
+    contact: 'Kishore: 8296841479 / Aishwarya: 6362593315'
   },
   {
     id: 'mg-04', 
-    name: 'GOLD PULSE (Finance)', 
+    name: 'Finance', 
     category: 'management',
     districtName: 'The Treasury Vault',
     districtTheme: 'card-vault',
@@ -376,11 +385,12 @@ export const events: Event[] = [
     ],
     venue: 'ROOM 103',
     time: '21ST JULY 2026, 11:00 am Onwards',
-    fee: '₹295'
+    fee: '₹295',
+    contact: 'Jayanth: 7483676497 / Padmashree: 6363277078'
   },
   {
     id: 'mg-05', 
-    name: 'INSIGHTS OF FORTUNE (Business Analytics)', 
+    name: 'Business Analytics', 
     category: 'management',
     districtName: 'The Innovation Quarter',
     districtTheme: 'card-innovation',
@@ -400,11 +410,12 @@ export const events: Event[] = [
     ],
     venue: 'ROOM 102',
     time: '21ST JULY 2026, 11:00 am Onwards',
-    fee: '₹295'
+    fee: '₹295',
+    contact: 'Kavya: 7899245458 / Kim Kishore: 7019670343'
   },
   {
     id: 'mg-06', 
-    name: 'VAULT QUEST (Vault Quest)', 
+    name: 'Trade Barter', 
     category: 'management',
     districtName: 'The Shifting Gates',
     districtTheme: 'card-gaming',
@@ -422,9 +433,10 @@ export const events: Event[] = [
       'Teams must present their finalized assets along with verification logs at the deadline.',
       'The team carrying the highest-value verified product wins the bracket.'
     ],
-    venue: 'Outside the Auditorium',
+    venue: 'Around the campus',
     time: '21ST JULY 2026, 11:00 am Onwards',
-    fee: '₹295'
+    fee: '₹177',
+    contact: 'Punith Kumar: 9740524323 / Pratheeksha: 9902327181'
   }
 ];
 
