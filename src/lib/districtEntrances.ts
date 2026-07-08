@@ -9,7 +9,7 @@ export const DISTRICT_ENTRANCE_MAP: Record<string, EntranceFn> = {
   'card-shadow': buildShadowEntrance,
   'card-thunder': buildThunderEntrance,
   'card-iron': buildIronEntrance,
-  'card-cricket': buildIronEntrance,
+  'card-cricket': buildDefaultEntrance,
   'card-earth': buildEarthEntrance,
   'card-elegance': buildEleganceEntrance,
   'card-moonlight': buildMoonlightEntrance,

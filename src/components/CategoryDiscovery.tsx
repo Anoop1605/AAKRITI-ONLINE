@@ -56,9 +56,14 @@ export const CategoryDiscovery: React.FC = () => {
           
           <div className="flex flex-col items-center text-center px-4 z-10">
             {panel.icon}
-            <h2 className="font-display font-bold text-text-primary text-[clamp(32px,6vw,64px)] tracking-wider mb-4">
+            <h2 className="font-display font-bold text-text-primary text-[clamp(32px,6vw,64px)] tracking-wider mb-2">
               {panel.title}
             </h2>
+            
+            <div className="font-sans font-medium text-xs md:text-sm tracking-[0.3em] text-text-ghost/85 uppercase mb-4">
+              [ {panel.id === 'sports' ? 'SPORTS DISTRICT' : panel.id === 'management' ? 'MANAGEMENT DISTRICT' : 'CULTURAL DISTRICT'} ]
+            </div>
+
             <p className="font-body italic text-text-body text-[clamp(18px,3vw,24px)]">
               "{panel.tagline}"
             </p>

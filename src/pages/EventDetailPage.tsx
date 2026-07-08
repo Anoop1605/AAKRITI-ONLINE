@@ -14,6 +14,11 @@ export const EventDetailPage: React.FC = () => {
   const event = events.find((e) => e.id === eventId);
   const { openModal } = useRegistrationStore();
 
+  // Ensure we start at the top before layout animations run
+  React.useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [eventId]);
+
   // Run the entrance animation
   useDistrictEntranceAnimation(containerRef, event?.districtTheme || '');
 
@@ -105,7 +110,6 @@ export const EventDetailPage: React.FC = () => {
           </>
         );
       case 'card-iron':
-      case 'card-cricket':
         return (
           <>
             <div className="detail-forge-heat absolute w-[500px] h-[400px] rounded-full pointer-events-none z-10" style={{ bottom: '0', left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(ellipse, rgba(139,30,10,0.16) 0%, transparent 75%)' }} />

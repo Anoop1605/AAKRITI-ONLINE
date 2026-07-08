@@ -1,5 +1,18 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  const navType = useNavigationType();
+
+  useEffect(() => {
+    if (navType !== 'POP') {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, navType]);
+
+  return null;
+}
 import { ScrollTrigger } from './lib/gsap';
 import { PetalCanvas } from './components/PetalCanvas';
 import { IntroOverlay } from './components/IntroOverlay';
@@ -14,8 +27,12 @@ function AppContent() {
   const isDetailPage = location.pathname.startsWith('/events/');
 
   useEffect(() => {
-    // Quality checklist: "ScrollTrigger.normalizeScroll(true) called once in App.tsx"
-    ScrollTrigger.normalizeScroll(true);
+    // Only enable normalizeScroll immediately if the intro has already played.
+    // If the intro is running, IntroOverlay will enable it when the animation finishes.
+    const introAlreadyPlayed = sessionStorage.getItem('introPlayed');
+    if (introAlreadyPlayed) {
+      ScrollTrigger.normalizeScroll(true);
+    }
 
     // Ping backend health check to wake/spin up the server
     const baseApiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
@@ -45,6 +62,7 @@ function AppContent() {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <AppContent />
       <Analytics />
     </Router>

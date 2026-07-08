@@ -92,13 +92,14 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="font-heading text-gold text-xs tracking-[0.2em] uppercase mb-3">Faculty Coordinators</h4>
             <p className="font-body text-text-ghost text-sm tracking-wide leading-relaxed">
-              Dr. Sujatha A M &bull; Ms. Nageshwari U
+              &bull; Dr. Sujatha A M <br></br>  &bull; Ms. Nageshwari U
             </p>
           </div>
           <div className="sm:text-right">
             <h4 className="font-heading text-gold text-xs tracking-[0.2em] uppercase mb-3">Student Coordinators</h4>
             <p className="font-body text-text-ghost text-sm tracking-wide leading-relaxed">
-              Jeevitha S &bull; Mehdee Khanum &bull; Abhishek R &bull; Hariharan R &bull; Manoj Gowda D M &bull; Sushanth J
+              Jeevitha S &bull; Mehdee Khanum &bull; Abhishek R &bull; Hariharan R &bull; Manoj Gowda D M  <br></br> &bull; Sushanth J &bull;
+              Rakesh Hosamani &bull; Sridhara G 
             </p>
           </div>
         </div>
@@ -109,7 +110,7 @@ export const Footer: React.FC = () => {
             &copy; 2026 {COLLEGE_NAME}. All Rights Reserved.
           </p>
           <p className="font-body text-[15px] text-text-ghost tracking-widest uppercase">
-            Forged by The Tech Council <span className="text-gold mx-2">|</span> Developed by <span className="text-gold font-medium">Anoop</span>
+            Forged by The Tech Council <span className="text-gold mx-2">|</span> Developed by <span className="text-gold font-medium">Anoop S S</span>
           </p>
         </div>
 

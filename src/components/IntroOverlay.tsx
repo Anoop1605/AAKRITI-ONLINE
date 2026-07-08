@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { ScrollTrigger } from '../lib/gsap';
 
 export const IntroOverlay: React.FC = () => {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -15,6 +16,45 @@ export const IntroOverlay: React.FC = () => {
 
   const [done, setDone] = useState(false);
   const [shouldRender] = useState(() => !sessionStorage.getItem('introPlayed'));
+
+  // Lock page scroll while the intro animation is running
+  useEffect(() => {
+    if (!shouldRender || done) return;
+
+    // Force scroll to top and lock body
+    window.scrollTo(0, 0);
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    ScrollTrigger.normalizeScroll(false);
+
+    // Block wheel events from reaching the page during intro
+    const blockWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    const blockTouch = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+    const blockKeyScroll = (e: KeyboardEvent) => {
+      const scrollKeys = ['ArrowDown', 'ArrowUp', 'Space', 'PageDown', 'PageUp', 'Home', 'End'];
+      if (scrollKeys.includes(e.code)) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('wheel', blockWheel, { passive: false });
+    window.addEventListener('touchmove', blockTouch, { passive: false });
+    window.addEventListener('keydown', blockKeyScroll, { passive: false });
+
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      ScrollTrigger.normalizeScroll(true);
+      window.removeEventListener('wheel', blockWheel);
+      window.removeEventListener('touchmove', blockTouch);
+      window.removeEventListener('keydown', blockKeyScroll);
+    };
+  }, [shouldRender, done]);
 
   useEffect(() => {
     const toriiCanvas = toriiCanvasRef.current;
