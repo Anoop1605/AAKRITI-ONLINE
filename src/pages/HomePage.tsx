@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLocation, useNavigationType } from 'react-router-dom';
 import { Hero } from '../components/Hero';
 import { CategoryDiscovery } from '../components/CategoryDiscovery';
+import { ComboPassBanner } from '../components/ComboPassBanner';
 import { SectionDivider } from '../components/SectionDivider';
 import { EventGrid } from '../components/EventGrid';
 import { CTABanner } from '../components/CTABanner';
@@ -44,6 +45,8 @@ export const HomePage = () => {
       </section>
 
       <CategoryDiscovery />
+      
+      <ComboPassBanner />
       
       <SectionDivider />
       <EventGrid id="sports" title={categories.sports.title} events={sportsEvents} />
