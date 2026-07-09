@@ -21,6 +21,7 @@ import { HomePage } from './pages/HomePage';
 import { EventDetailPage } from './pages/EventDetailPage';
 import { RegistrationModal } from './components/RegistrationModal';
 import { Analytics } from '@vercel/analytics/react';
+import GlobalCommsWidget from './components/GlobalCommsWidget';
 
 function AppContent() {
   const location = useLocation();
@@ -55,6 +56,7 @@ function AppContent() {
       </Routes>
 
       <RegistrationModal />
+      <GlobalCommsWidget />
     </>
   );
 }

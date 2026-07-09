@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { events } from '../data/events';
 import { useRegistrationStore } from '../store/registrationStore';
@@ -13,6 +13,7 @@ export const EventDetailPage: React.FC = () => {
 
   const event = events.find((e) => e.id === eventId);
   const { openModal } = useRegistrationStore();
+  const [isCommExpanded, setIsCommExpanded] = useState(false);
 
   // Ensure we start at the top before layout animations run
   React.useLayoutEffect(() => {
@@ -245,6 +246,24 @@ export const EventDetailPage: React.FC = () => {
     }
   };
 
+  const handleCommRedirect = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isCommExpanded) return;
+
+    // Step 1: Fire text expansion inside card
+    setIsCommExpanded(true);
+
+    // Step 2: Hold frame to show the full "DISTRICT COMM" title
+    setTimeout(() => {
+      window.open(event.whatsappLink || "#", "_blank", "noopener,noreferrer");
+      
+      // Step 3: Retreat scroll state back to original circular target
+      setIsCommExpanded(false);
+    }, 500);
+  };
+
   return (
     <div 
       ref={containerRef} 
@@ -370,6 +389,44 @@ export const EventDetailPage: React.FC = () => {
           REGISTER FOR THIS DISTRICT &rarr;
         </button>
       </div>
+
+      {/* Event-Specific Floating Button (District Comm) */}
+      {event.whatsappLink && (
+        <a 
+          href={event.whatsappLink} 
+          onClick={handleCommRedirect}
+          onMouseEnter={() => setIsCommExpanded(true)}
+          onMouseLeave={() => setIsCommExpanded(false)}
+          className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100] flex items-center bg-stone-mid/90 border border-stone-mid/80 backdrop-blur-md rounded-full shadow-[0_0_15px_rgba(212,160,84,0.15)] transition-all duration-500 overflow-hidden hover:border-gold/50 hover:shadow-[0_0_30px_rgba(212,160,84,0.4)] hover:scale-105 group/comm"
+        >
+          {/* Icon Container */}
+          <div className="p-4 text-gold transition-transform duration-300 group-hover/comm:animate-pulse">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              className="drop-shadow-[0_0_8px_rgba(212,160,84,0.8)]"
+            >
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.38 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.38 0 0 1 8 8v.5z"/>
+            </svg>
+          </div>
+          
+          {/* Dynamic Pill Expansion Container */}
+          <div 
+            className={`whitespace-nowrap font-demon-slayer tracking-widest text-sm text-text-primary transition-all duration-500 ease-in-out flex items-center ${
+              isCommExpanded ? 'max-w-[200px] opacity-100 pr-6 translate-x-0' : 'max-w-0 opacity-0 pr-0 translate-x-4'
+            }`}
+          >
+            DISTRICT COMM
+          </div>
+        </a>
+      )}
     </div>
   );
 };

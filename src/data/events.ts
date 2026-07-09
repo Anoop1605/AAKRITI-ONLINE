@@ -17,6 +17,7 @@ export interface Event {
   time: string;              // Time of the event
   fee: string;               // Registration fee
   contact?: string;          // Direct mobile contact for event head
+  whatsappLink?: string;     // WhatsApp group link for the event
 }
 
 export const events: Event[] = [
@@ -464,3 +465,28 @@ export const categories = {
     color: '#8B5E1A'
   }
 };
+
+const whatsappLinksMap: Record<string, string> = {
+  'sp-01': 'https://chat.whatsapp.com/HP1h5FBiMnHD7kx9duUXE6', // Throwball
+  'sp-02': 'https://chat.whatsapp.com/CYP5qL8TSsMDL7ldgu1SeU', // Volleyball
+  'sp-03': 'https://chat.whatsapp.com/E74vv2vD0bO1MPXhDYgtMc', // Carrom
+  'sp-07': 'https://chat.whatsapp.com/IFAgqcDzHUm8wtff80c2Uz', // Tug of War
+  'sp-08': 'https://chat.whatsapp.com/KE8NtYAznCt89g0u9Fw5FC', // Cricket
+  'cu-01': 'https://chat.whatsapp.com/EMtGH7BS1kMGWfACYxJHHi', // Fashion Show
+  'cu-02': 'https://chat.whatsapp.com/FLuxaK81JqmFreKyufKsGk', // Duet Dance
+  'cu-03': 'https://chat.whatsapp.com/K7AsY21cfsiFeYqcth5QuF', // Group Dance
+  'cu-04': 'https://chat.whatsapp.com/H5ABEbBqIj1EjpRslxXOMB', // Treasure Hunt
+  'cu-05': 'https://chat.whatsapp.com/LFqNJNGP4QoCA81arO9fub', // Short Film
+  'cu-06': 'https://chat.whatsapp.com/Da8dluRyolrA3uTKuIRGmZ', // Free Fire
+  'mg-01': 'https://chat.whatsapp.com/ClKHY9eoXJW84eP9EmycYt', // Business Quiz
+  'mg-02': 'https://chat.whatsapp.com/BevIIukrLIW9409FsuhZcS', // Ads Creation
+  'mg-03': 'https://chat.whatsapp.com/ELGIgA2VJZc5HBjZeS9uXb', // Best Manager
+  'mg-04': 'https://chat.whatsapp.com/BaoGk3TzwHiI9XiU15Qmdp', // Finance
+  'mg-05': 'https://chat.whatsapp.com/HfR3NTcyTvR3R4DUGYoTSz', // Business Analytics
+  'mg-06': 'https://chat.whatsapp.com/C3QBFht3Um0BPxr7ZLaRet', // Trade Barter
+};
+
+events.forEach(e => {
+  e.whatsappLink = whatsappLinksMap[e.id] || '';
+});
+

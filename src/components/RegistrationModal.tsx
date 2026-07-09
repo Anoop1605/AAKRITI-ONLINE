@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { X } from 'lucide-react';
+import { X, CheckCircle, MessageCircle } from 'lucide-react';
 import { useRegistrationStore } from '../store/registrationStore';
 import { events } from '../data/events';
 import { gsap, ScrollTrigger } from '../lib/gsap';
@@ -227,6 +227,12 @@ export const RegistrationModal: React.FC = () => {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
+
   if (!isOpen) return null;
 
   const handleNext = async (currentStep: number) => {
@@ -325,10 +331,8 @@ export const RegistrationModal: React.FC = () => {
       });
 
       if (response.status === 201) {
-        reset();
         setScreenshot(null);
-        alert("Registration successful! The Castle awaits your arrival.");
-        closeModal();
+        setStep(4);
       } else {
         const errorData = await response.json().catch(() => ({}));
         setSubmitError(errorData.error || 'Failed to submit registration. Please try again.');
@@ -362,7 +366,7 @@ export const RegistrationModal: React.FC = () => {
         <div className="relative z-10 h-1 bg-void w-full shrink-0">
           <div 
             className="absolute top-0 left-0 h-full bg-gold transition-all duration-500 ease-out" 
-            style={{ width: `${(step / 3) * 100}%` }} 
+            style={{ width: `${(Math.min(step, 3) / 3) * 100}%` }} 
           />
         </div>
 
@@ -564,41 +568,88 @@ export const RegistrationModal: React.FC = () => {
                 </div>
               </div>
             )}
+
+            {/* STEP 4: SUCCESS */}
+            {step === 4 && (
+              <div className="flex flex-col items-center text-center space-y-6 animate-fade-in py-8">
+                
+                {/* Cinematic Success Icon (Glowing Seal) */}
+                <div className="w-20 h-20 bg-stone-mid border border-gold/50 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.2)] mb-2">
+                  <CheckCircle className="text-gold w-10 h-10" />
+                </div>
+
+                {/* The Confirmation Text */}
+                <div>
+                  <h2 className="text-3xl font-demon-slayer text-text-primary tracking-wider">
+                    REGISTRATION FORGED
+                  </h2>
+                  <p className="text-text-ghost text-s mt-3 max-w-sm mx-auto leading-relaxed">
+                    Your pledge to <span className="text-gold font-semibold">{event?.name}</span> has been sealed. The council is reviewing your transaction.
+                  </p>
+                  <p className="text-text-body text-sm mt-2 italic">
+                    Do not miss the call. Join your district's comms now.
+                  </p>
+                </div>
+
+                {/* The Direct Link Button (Replaces the QR Code) */}
+                {event?.whatsappLink && (
+                  <a 
+                    href={event.whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 px-8 py-3 bg-crimson-lo/80 hover:bg-crimson text-text-primary font-bold tracking-widest rounded transition-all border border-crimson/30 hover:border-crimson hover:shadow-[0_0_20px_rgba(192,57,43,0.4)] flex items-center gap-3 group"
+                  >
+                    <MessageCircle size={20} className="text-text-ghost group-hover:text-text-primary transition-colors" />
+                    ENTER THE ENCAMPMENT
+                  </a>
+                )}
+                
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="mt-4 text-text-ghost hover:text-gold text-xs uppercase tracking-widest transition-colors font-semibold font-heading"
+                >
+                  Return to Citadel
+                </button>
+              </div>
+            )}
           </form>
         </div>
 
         {/* Footer Actions */}
-        <div className="relative z-10 border-t border-gold/10 p-4 bg-stone flex gap-4 shrink-0">
-          {step > 1 && (
-            <button 
-              type="button" 
-              onClick={() => handleBack(step)}
-              className="px-6 py-3 border border-stone-mid text-text-body font-heading text-sm hover:text-text-primary transition-colors rounded-[2px] w-1/3"
-            >
-              BACK
-            </button>
-          )}
-          {step < 3 ? (
-            <button 
-              type="button" 
-              onClick={() => handleNext(step)}
-              className="flex-1 bg-gold hover:bg-gold-bright text-void font-heading font-semibold tracking-widest text-sm py-3 rounded-[2px] transition-colors"
-            >
-              CONTINUE
-            </button>
-          ) : (
-            <button 
-              form="regForm"
-              type="submit"
-              disabled={isSubmitting}
-              className={`flex-1 font-heading font-semibold tracking-widest text-sm py-3 rounded-[2px] transition-colors ${
-                isSubmitting ? 'bg-stone-mid text-text-ghost cursor-not-allowed' : 'bg-crimson hover:bg-crimson-hi text-text-primary shadow-[0_0_20px_rgba(192,57,43,0.3)]'
-              }`}
-            >
-              {isSubmitting ? 'SEALING...' : 'IGNITE YOUR ENTRY'}
-            </button>
-          )}
-        </div>
+        {step < 4 && (
+          <div className="relative z-10 border-t border-gold/10 p-4 bg-stone flex gap-4 shrink-0">
+            {step > 1 && (
+              <button 
+                type="button" 
+                onClick={() => handleBack(step)}
+                className="px-6 py-3 border border-stone-mid text-text-body font-heading text-sm hover:text-text-primary transition-colors rounded-[2px] w-1/3"
+              >
+                BACK
+              </button>
+            )}
+            {step < 3 ? (
+              <button 
+                type="button" 
+                onClick={() => handleNext(step)}
+                className="flex-1 bg-gold hover:bg-gold-bright text-void font-heading font-semibold tracking-widest text-sm py-3 rounded-[2px] transition-colors"
+              >
+                CONTINUE
+              </button>
+            ) : (
+              <button 
+                form="regForm"
+                type="submit"
+                disabled={isSubmitting}
+                className={`flex-1 font-heading font-semibold tracking-widest text-sm py-3 rounded-[2px] transition-colors ${
+                  isSubmitting ? 'bg-stone-mid text-text-ghost cursor-not-allowed' : 'bg-crimson hover:bg-crimson-hi text-text-primary shadow-[0_0_20px_rgba(192,57,43,0.3)]'
+                }`}
+              >
+                {isSubmitting ? 'SEALING...' : 'IGNITE YOUR ENTRY'}
+              </button>
+            )}
+          </div>
+        )}
 
       </div>
     </div>

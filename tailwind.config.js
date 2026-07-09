@@ -35,6 +35,7 @@ export default {
         heading: ['"Cinzel"', 'serif'],
         body: ['"EB Garamond"', 'serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
+        'demon-slayer': ['"Cinzel Decorative"', 'serif'],
       },
       borderRadius: {
         none: '0',
