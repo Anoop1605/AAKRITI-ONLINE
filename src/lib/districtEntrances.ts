@@ -31,7 +31,7 @@ function buildStoneEntrance(container: HTMLElement): GSAPTimeline {
   const torches = container.querySelectorAll('.detail-torch-glow');
   const dust = container.querySelector('.detail-dust-overlay') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { scale: 1.12, opacity: 0, filter: 'brightness(0)' },
@@ -64,7 +64,7 @@ function buildWindEntrance(container: HTMLElement): GSAPTimeline {
   const lantern = container.querySelector('.detail-wind-lantern') as HTMLElement;
   const streaks = container.querySelectorAll('.detail-wind-streak');
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { scale: 1.1, opacity: 0 },
@@ -94,7 +94,7 @@ function buildShadowEntrance(container: HTMLElement): GSAPTimeline {
   const candle = container.querySelector('.detail-candle-glow') as HTMLElement;
   const flame = container.querySelector('.detail-candle-flame') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0 },
@@ -127,7 +127,7 @@ function buildThunderEntrance(container: HTMLElement): GSAPTimeline {
   const flashDiv = container.querySelector('.detail-thunder-flash') as HTMLElement;
   const crack = container.querySelector('.detail-lightning-crack') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(flashDiv,
     { opacity: 0 },
@@ -167,7 +167,7 @@ function buildIronEntrance(container: HTMLElement): GSAPTimeline {
   const heat = container.querySelector('.detail-forge-heat') as HTMLElement;
   const sparks = container.querySelectorAll('.detail-spark');
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { scale: 1.1, opacity: 0, filter: 'brightness(0) saturate(0)' },
@@ -204,7 +204,7 @@ function buildEarthEntrance(container: HTMLElement): GSAPTimeline {
   const pillarR = container.querySelector('.detail-pillar-right') as HTMLElement;
   const dust = container.querySelector('.detail-dust-overlay') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { scale: 1.08, opacity: 0, y: '3%' },
@@ -240,7 +240,7 @@ function buildEleganceEntrance(container: HTMLElement): GSAPTimeline {
   const runway = container.querySelector('.detail-runway-line') as HTMLElement;
   const petals = container.querySelectorAll('.detail-elegance-petal');
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { scale: 1.08, opacity: 0, filter: 'saturate(0)' },
@@ -274,7 +274,7 @@ function buildMoonlightEntrance(container: HTMLElement): GSAPTimeline {
   const spotLeft = container.querySelector('.detail-spot-left') as HTMLElement;
   const spotRight = container.querySelector('.detail-spot-right') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0 },
@@ -320,7 +320,7 @@ function buildPlazaEntrance(container: HTMLElement): GSAPTimeline {
   const curtainL = container.querySelector('.detail-curtain-left') as HTMLElement;
   const curtainR = container.querySelector('.detail-curtain-right') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0, scale: 1.04 },
@@ -360,7 +360,7 @@ function buildHiddenPathEntrance(container: HTMLElement): GSAPTimeline {
   const lanterns = container.querySelectorAll('.detail-path-lantern');
   const mapFrag = container.querySelector('.detail-map-fragment') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0, scale: 1.06 },
@@ -395,7 +395,7 @@ function buildStudioEntrance(container: HTMLElement): GSAPTimeline {
   const filmStrip = container.querySelector('.detail-film-strip') as HTMLElement;
   const clap = container.querySelector('.detail-clap-flash') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0 },
@@ -432,7 +432,7 @@ function buildGamingEntrance(container: HTMLElement): GSAPTimeline {
   const zone = container.querySelector('.detail-zone-ring') as HTMLElement;
   const marker = container.querySelector('.detail-squad-marker') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0, filter: 'brightness(0)' },
@@ -476,7 +476,7 @@ function buildCouncilEntrance(container: HTMLElement): GSAPTimeline {
   const candles = container.querySelectorAll('.detail-council-candle');
   const scroll = container.querySelector('.detail-scroll-line') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0, filter: 'brightness(0)' },
@@ -514,7 +514,7 @@ function buildMarketEntrance(container: HTMLElement): GSAPTimeline {
   const lanterns = container.querySelectorAll('.detail-market-lantern');
   const banner = container.querySelector('.detail-market-banner') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0, scale: 1.05 },
@@ -549,7 +549,7 @@ function buildDojoEntrance(container: HTMLElement): GSAPTimeline {
   const spotlight = container.querySelector('.detail-dojo-spot') as HTMLElement;
   const chairGlow = container.querySelector('.detail-chair-glow') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0 },
@@ -583,7 +583,7 @@ function buildVaultEntrance(container: HTMLElement): GSAPTimeline {
   const ringInner = container.querySelector('.detail-vault-ring-inner') as HTMLElement;
   const goldLight = container.querySelector('.detail-vault-light') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0, scale: 0.95 },
@@ -628,7 +628,7 @@ function buildInnovationEntrance(container: HTMLElement): GSAPTimeline {
   const pagodaT = container.querySelector('.detail-pagoda-top') as HTMLElement;
   const pulse = container.querySelector('.detail-data-pulse') as HTMLElement;
 
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0, scale: 1.04 },
@@ -671,7 +671,7 @@ function buildInnovationEntrance(container: HTMLElement): GSAPTimeline {
 
 export function buildDefaultEntrance(container: HTMLElement): GSAPTimeline {
   const bg = container.querySelector('.detail-bg') as HTMLElement;
-  const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline();
 
   tl.fromTo(bg,
     { opacity: 0, scale: 1.05 },

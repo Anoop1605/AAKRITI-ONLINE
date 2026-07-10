@@ -194,7 +194,7 @@ export const EventDetailPage: React.FC = () => {
             <div className="detail-stage-light absolute w-[80%] h-[70%] top-0 pointer-events-none z-10 origin-top" style={{ left: '10%', clipPath: 'polygon(40% 0%, 60% 0%, 90% 100%, 10% 100%)', background: 'radial-gradient(ellipse at 50% 0%, rgba(212,160,84,0.06) 0%, transparent 70%)' }} />
             <div className="detail-curtain-left absolute top-0 left-0 w-1/2 h-full bg-[#080406]/95 pointer-events-none z-20" />
             <div className="detail-curtain-right absolute top-0 right-0 w-1/2 h-full bg-[#080406]/95 pointer-events-none z-20" />
-            <div className="detail-crowd-silhouette absolute bottom-0 left-0 w-full h-[18%] bg-[#050407]/90 pointer-events-none z-20 flex justify-around items-end px-4">
+            <div className="detail-crowd-silhouette absolute bottom-0 left-0 w-full h-[18%] bg-[#050407]/90 pointer-events-none z-[5] flex justify-around items-end px-4">
               {[...Array(10)].map((_, i) => (
                 <div key={i} className="w-10 h-10 rounded-full bg-void opacity-70 transform translate-y-3" />
               ))}
@@ -301,7 +301,7 @@ export const EventDetailPage: React.FC = () => {
       className="relative min-h-screen bg-void flex flex-col justify-between overflow-hidden text-text-primary px-6 py-24 z-10"
     >
       {/* Viewport fixed background with CSS gradient scene */}
-      <div className={`detail-bg absolute inset-0 ${event.districtTheme} origin-center pointer-events-none z-0`} />
+      <div className="detail-bg absolute inset-0 bg-void origin-center pointer-events-none z-0" />
 
       {/* Conditionally injected ambient elements */}
       {renderAmbientElements(event.districtTheme)}
