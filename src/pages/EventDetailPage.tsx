@@ -15,11 +15,9 @@ export const EventDetailPage: React.FC = () => {
   const { openModal, isOpen } = useRegistrationStore();
   const [isCommExpanded, setIsCommExpanded] = useState(false);
   const [regCount, setRegCount] = useState<number | null>(null);
-  const [isLoadingRegCount, setIsLoadingRegCount] = useState(false);
 
   useEffect(() => {
     if (event && event.maxSeats !== undefined) {
-      setIsLoadingRegCount(true);
       const baseApiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
       fetch(`${baseApiUrl}/api/v1/registrations/count?category=${event.category}&eventName=${encodeURIComponent(event.name)}`)
         .then((res) => {
@@ -33,45 +31,11 @@ export const EventDetailPage: React.FC = () => {
         })
         .catch((err) => {
           console.error("Error fetching registration count:", err);
-        })
-        .finally(() => {
-          setIsLoadingRegCount(false);
         });
     } else {
       setRegCount(null);
     }
   }, [event, isOpen]);
-
-  // Get time-dependent bounds for realistic visitor counts (Peak vs. Late Night)
-  const getVisitorBounds = () => {
-    const hour = new Date().getHours();
-    // Peak hours: 9 AM to 10 PM (4 to 10 signatures)
-    if (hour >= 9 && hour < 22) {
-      return { min: 4, max: 10 };
-    }
-    // Late Night / Early Morning: 10 PM to 9 AM (1 to 3 signatures)
-    return { min: 1, max: 3 };
-  };
-
-  // Simulated visitor breathing signatures count
-  const [visitorCount, setVisitorCount] = useState(() => {
-    const { min, max } = getVisitorBounds();
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setVisitorCount((prev) => {
-        const { min, max } = getVisitorBounds();
-        if (prev < min) return min;
-        if (prev > max) return max;
-        const change = Math.random() > 0.5 ? 1 : -1;
-        const newCount = prev + change;
-        return newCount >= min && newCount <= max ? newCount : prev;
-      });
-    }, 4500);
-    return () => clearInterval(interval);
-  }, []);
 
   // Ensure we start at the top before layout animations run
   React.useLayoutEffect(() => {
