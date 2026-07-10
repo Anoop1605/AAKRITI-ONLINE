@@ -17,21 +17,30 @@ const getTeamDetails = (eventId: string | null) => {
   if (!targetEvent) return { isSolo: true, min: 1, max: 1 };
   
   const size = targetEvent.teamSize.toLowerCase();
+  
+  // 1. Check for Solo / Singles / Doubles
   if (size.includes('singles / doubles') || size.includes('singles/doubles')) return { isSolo: false, min: 1, max: 2 };
   if (size.includes('solo') || size === '1v1' || size === 'singles') return { isSolo: true, min: 1, max: 1 };
-  if (size.includes('7v7')) return { isSolo: false, min: 7, max: 10 };
-  if (size.includes('6v6')) return { isSolo: false, min: 6, max: 10 };
   if (size.includes('doubles')) return { isSolo: false, min: 2, max: 2 };
-  
-  const plusMatch = size.match(/(\d+)\s*\+\s*(\d+)/);
-  if (plusMatch) return { isSolo: false, min: parseInt(plusMatch[1]), max: parseInt(plusMatch[1]) + parseInt(plusMatch[2]) };
-  
-  const wordMatch = size.match(/(\d+)\s*(members|players|pullers)/);
-  if (wordMatch) return { isSolo: false, min: parseInt(wordMatch[1]), max: parseInt(wordMatch[1]) };
+
+  // 2. Check for ranges first (to avoid substring matching on word match)
+  const rangeToMatch = size.match(/(\d+)\s*to\s*(\d+)/);
+  if (rangeToMatch) return { isSolo: false, min: parseInt(rangeToMatch[1]), max: parseInt(rangeToMatch[2]) };
 
   const rangeMatch = size.match(/(\d+)\s*[-–]\s*(\d+)/);
   if (rangeMatch) return { isSolo: false, min: parseInt(rangeMatch[1]), max: parseInt(rangeMatch[2]) };
-  
+
+  const plusMatch = size.match(/(\d+)\s*\+\s*(\d+)/);
+  if (plusMatch) return { isSolo: false, min: parseInt(plusMatch[1]), max: parseInt(plusMatch[1]) + parseInt(plusMatch[2]) };
+
+  // 3. Check for specific formats
+  if (size.includes('7v7')) return { isSolo: false, min: 7, max: 10 };
+  if (size.includes('6v6')) return { isSolo: false, min: 6, max: 10 };
+
+  // 4. Fixed word matching
+  const wordMatch = size.match(/(\d+)\s*(members|players|pullers)/);
+  if (wordMatch) return { isSolo: false, min: parseInt(wordMatch[1]), max: parseInt(wordMatch[1]) };
+
   return { isSolo: false, min: 2, max: 15 };
 };
 
