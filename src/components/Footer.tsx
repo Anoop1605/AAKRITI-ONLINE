@@ -92,15 +92,16 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="font-heading text-gold text-xs tracking-[0.2em] uppercase mb-3">Faculty Coordinators</h4>
             <p className="font-body text-text-ghost text-sm tracking-wide leading-relaxed">
-              &bull; Dr. Sujatha A M <br></br>  &bull; Ms. Nageshwari U
+              &bull; Dr. Sujatha A M <br></br>  &bull; Ms. Nageshwari U <br></br> &bull; Rakesh Hosamani <br></br>&bull; Sridhara G 
             </p>
           </div>
-          <div className="sm:text-right">
-            <h4 className="font-heading text-gold text-xs tracking-[0.2em] uppercase mb-3">Student Coordinators</h4>
-            <p className="font-body text-text-ghost text-sm tracking-wide leading-relaxed">
-              Jeevitha S &bull; Mehdee Khanum &bull; Abhishek R &bull; Hariharan R &bull; Manoj Gowda D M  <br></br> &bull; Sushanth J &bull;
-              Rakesh Hosamani &bull; Sridhara G 
-            </p>
+          <div className="flex flex-col items-center sm:items-end text-center sm:text-left">
+            <div className="text-left">
+              <h4 className="font-heading text-gold text-xs tracking-[0.2em] uppercase mb-3">Student Coordinators</h4>
+              <p className="font-body text-text-ghost text-sm tracking-wide leading-relaxed">
+                &bull; Jeevitha S <br></br> &bull; Mehdee Khanum <br></br> &bull; Abhishek R <br></br> &bull; Hariharan R <br></br> &bull; Manoj Gowda D M <br></br> &bull; Sushanth J
+              </p>
+            </div>
           </div>
         </div>
 
@@ -110,7 +111,7 @@ export const Footer: React.FC = () => {
             &copy; 2026 {COLLEGE_NAME}. All Rights Reserved.
           </p>
           <p className="font-body text-[15px] text-text-ghost tracking-widest uppercase">
-            Forged by The Tech Council <span className="text-gold mx-2">|</span> Developed by <span className="text-gold font-medium">Anoop S S</span>
+            Forged by The Tech Council <span className="text-gold mx-2">|</span> Developed by <span className="text-gold font-bold tracking-widest drop-shadow-[0_0_12px_rgba(212,160,84,0.75)]">ANOOP S S</span>
           </p>
         </div>
 

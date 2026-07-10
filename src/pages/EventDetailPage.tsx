@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { events } from '../data/events';
 import { useRegistrationStore } from '../store/registrationStore';
@@ -14,6 +14,37 @@ export const EventDetailPage: React.FC = () => {
   const event = events.find((e) => e.id === eventId);
   const { openModal } = useRegistrationStore();
   const [isCommExpanded, setIsCommExpanded] = useState(false);
+
+  // Get time-dependent bounds for realistic visitor counts (Peak vs. Late Night)
+  const getVisitorBounds = () => {
+    const hour = new Date().getHours();
+    // Peak hours: 9 AM to 10 PM (4 to 10 signatures)
+    if (hour >= 9 && hour < 22) {
+      return { min: 4, max: 10 };
+    }
+    // Late Night / Early Morning: 10 PM to 9 AM (1 to 3 signatures)
+    return { min: 1, max: 3 };
+  };
+
+  // Simulated visitor breathing signatures count
+  const [visitorCount, setVisitorCount] = useState(() => {
+    const { min, max } = getVisitorBounds();
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisitorCount((prev) => {
+        const { min, max } = getVisitorBounds();
+        if (prev < min) return min;
+        if (prev > max) return max;
+        const change = Math.random() > 0.5 ? 1 : -1;
+        const newCount = prev + change;
+        return newCount >= min && newCount <= max ? newCount : prev;
+      });
+    }, 4500);
+    return () => clearInterval(interval);
+  }, []);
 
   // Ensure we start at the top before layout animations run
   React.useLayoutEffect(() => {
@@ -316,9 +347,20 @@ export const EventDetailPage: React.FC = () => {
         </h1>
 
         {/* Tagline */}
-        <p className="detail-tagline opacity-0 font-body italic text-gold text-lg md:text-xl text-center md:text-left mb-8">
+        <p className="detail-tagline opacity-0 font-body italic text-gold text-lg md:text-xl text-center md:text-left mb-6">
           "{event.tagline}"
         </p>
+
+        {/* Breathing Signatures Indicator */}
+        <div className="detail-breathing-signatures opacity-0 flex items-center justify-center md:justify-start gap-2.5 mb-8">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 shadow-[0_0_10px_#10b981]"></span>
+          </span>
+          <span className="font-mono text-xs tracking-wider text-text-ghost uppercase">
+            <span className="text-emerald-400 font-bold">{visitorCount}</span> Breathing Signatures detected in this Realm
+          </span>
+        </div>
 
         {/* Stats Grid Box */}
         <div className="detail-stats-box opacity-0 grid grid-cols-3 gap-4 border border-gold/15 bg-stone-mid/45 p-4 md:p-6 mb-8 rounded-[2px] [transform-style:preserve-3d]">

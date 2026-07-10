@@ -52,6 +52,7 @@ export function useDistrictEntranceAnimation(
     const eventName = container.querySelector('.detail-event-name');
     const tagline = container.querySelector('.detail-tagline');
     const statsBox = container.querySelector('.detail-stats-box');
+    const breathingSigs = container.querySelector('.detail-breathing-signatures');
     const description = container.querySelector('.detail-description');
     const ctaBtn = container.querySelector('.detail-cta');
 
@@ -74,6 +75,11 @@ export function useDistrictEntranceAnimation(
       { opacity: 0, y: 15, rotateX: 6 },
       { opacity: 1, y: 0, rotateX: 0, duration: 0.55, ease: 'power3.out' },
       1.25
+    );
+    master.fromTo(breathingSigs,
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+      1.35
     );
     master.fromTo(description,
       { opacity: 0 },

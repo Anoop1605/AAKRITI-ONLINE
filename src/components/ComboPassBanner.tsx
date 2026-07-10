@@ -36,7 +36,7 @@ export const ComboPassBanner: React.FC = () => {
 
           <div className="inline-flex items-center gap-3 bg-void/50 border border-gold/10 px-4 py-2 rounded text-xs font-mono text-gold">
             <Sparkles size={12} />
-            <span>SEQUENTIAL ROSTER AUTO-SAVE ENABLED</span>
+            <span>SEQUENTIAL ROSTER </span>
           </div>
         </div>
 

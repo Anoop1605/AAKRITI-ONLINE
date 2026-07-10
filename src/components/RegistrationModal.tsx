@@ -172,28 +172,56 @@ export const RegistrationModal: React.FC = () => {
 
   if (!isOpen) return null;
 
-  const handleSingleTeamSizeChange = (newSize: number) => {
-    setSingleTeamSize(newSize);
-    const targetLength = newSize > 1 ? newSize - 1 : 0;
-    setSingleEventMembers((prev) => {
-      if (prev.length < targetLength) {
-        return [...prev, ...Array(targetLength - prev.length).fill('')];
-      } else {
-        return prev.slice(0, targetLength);
-      }
-    });
+  const handleSingleTeamSizeChangeInput = (valueStr: string) => {
+    if (!valueStr) {
+      setSingleTeamSize(0);
+      setSingleEventMembers([]);
+      return;
+    }
+    const val = parseInt(valueStr, 10);
+    if (isNaN(val)) return;
+
+    setSingleTeamSize(val);
+
+    if (val >= min && val <= max) {
+      const targetLength = val > 1 ? val - 1 : 0;
+      setSingleEventMembers((prev) => {
+        if (prev.length < targetLength) {
+          return [...prev, ...Array(targetLength - prev.length).fill('')];
+        } else {
+          return prev.slice(0, targetLength);
+        }
+      });
+      setLocalError(null);
+    } else {
+      setSingleEventMembers([]);
+    }
   };
 
-  const handleComboTeamSizeChange = (newSize: number) => {
-    setCurrentComboTeamSize(newSize);
-    const targetLength = newSize > 1 ? newSize - 1 : 0;
-    setCurrentEventMembers((prev) => {
-      if (prev.length < targetLength) {
-        return [...prev, ...Array(targetLength - prev.length).fill('')];
-      } else {
-        return prev.slice(0, targetLength);
-      }
-    });
+  const handleComboTeamSizeChangeInput = (valueStr: string) => {
+    if (!valueStr) {
+      setCurrentComboTeamSize(0);
+      setCurrentEventMembers([]);
+      return;
+    }
+    const val = parseInt(valueStr, 10);
+    if (isNaN(val)) return;
+
+    setCurrentComboTeamSize(val);
+
+    if (val >= min && val <= max) {
+      const targetLength = val > 1 ? val - 1 : 0;
+      setCurrentEventMembers((prev) => {
+        if (prev.length < targetLength) {
+          return [...prev, ...Array(targetLength - prev.length).fill('')];
+        } else {
+          return prev.slice(0, targetLength);
+        }
+      });
+      setLocalError(null);
+    } else {
+      setCurrentEventMembers([]);
+    }
   };
 
   const handleMemberNameChange = (idx: number, val: string) => {
@@ -212,15 +240,29 @@ export const RegistrationModal: React.FC = () => {
     setLocalError(null);
     if (currentStep === 1) {
       const isIdentityValid = await trigger(['name', 'email', 'phone', 'college', 'year']);
-      if (isIdentityValid) proceedToStep(2);
+      if (isIdentityValid) {
+        if (!isComboPass && !isSolo) {
+          if (singleTeamSize < min || singleTeamSize > max) {
+            setLocalError(`Team size must be between ${min} and ${max} members.`);
+            return;
+          }
+        }
+        proceedToStep(2);
+      }
     } else if (currentStep === 2) {
       if (!activeEvent) return;
 
       if (isComboPass) {
         // Validate Combo Active Roster
-        if (min > 1 && !currentEventTeamName.trim()) {
-          setLocalError('Team name is mandatory for this event.');
-          return;
+        if (min > 1) {
+          if (currentComboTeamSize < min || currentComboTeamSize > max) {
+            setLocalError(`Team size must be between ${min} and ${max} members.`);
+            return;
+          }
+          if (!currentEventTeamName.trim()) {
+            setLocalError('Team name is mandatory for this event.');
+            return;
+          }
         }
         if (!currentEventLeaderName.trim() || !currentEventLeaderPhone.match(/^[6-9]\d{9}$/)) {
           setLocalError('Please provide a valid 10-digit Leader Mobile number and Name.');
@@ -259,6 +301,10 @@ export const RegistrationModal: React.FC = () => {
       } else {
         // Validate Single Event Roster
         if (!isSolo) {
+          if (singleTeamSize < min || singleTeamSize > max) {
+            setLocalError(`Team size must be between ${min} and ${max} members.`);
+            return;
+          }
           if (!singleTeamName.trim()) {
             setLocalError('Team name is mandatory for team events.');
             return;
@@ -442,15 +488,16 @@ export const RegistrationModal: React.FC = () => {
                     ) : (
                       <div>
                         <label className="block text-text-ghost text-xs mb-1">Total Team Size (including you) *</label>
-                        <select 
-                          value={singleTeamSize}
-                          onChange={(e) => handleSingleTeamSizeChange(Number(e.target.value))}
-                          className="w-full bg-void border border-stone-mid px-4 py-3 rounded text-text-primary text-sm outline-none cursor-pointer"
-                        >
-                          {Array.from({ length: max - min + 1 }, (_, idx) => min + idx).map((size) => (
-                            <option key={size} value={size}>{size} members</option>
-                          ))}
-                        </select>
+                        <input 
+                          type="number"
+                          min={min}
+                          max={max}
+                          value={singleTeamSize || ''}
+                          onChange={(e) => handleSingleTeamSizeChangeInput(e.target.value)}
+                          className="w-full bg-void border border-stone-mid px-4 py-3 rounded text-text-primary text-sm outline-none"
+                          placeholder={`Enter number between ${min} and ${max}`}
+                        />
+                        <p className="text-[10px] text-text-ghost mt-1">Required range: {min} to {max} members</p>
                       </div>
                     )}
                   </div>
@@ -490,15 +537,16 @@ export const RegistrationModal: React.FC = () => {
                         {min !== max && (
                           <div>
                             <label className="block text-text-ghost text-xs mb-1">Total Team Size (including leader) *</label>
-                            <select 
-                              value={currentComboTeamSize}
-                              onChange={(e) => handleComboTeamSizeChange(Number(e.target.value))}
-                              className="w-full bg-void border border-stone-mid px-4 py-2.5 rounded text-sm text-text-primary outline-none cursor-pointer"
-                            >
-                              {Array.from({ length: max - min + 1 }, (_, idx) => min + idx).map((size) => (
-                                <option key={size} value={size}>{size} members</option>
-                              ))}
-                            </select>
+                            <input 
+                              type="number"
+                              min={min}
+                              max={max}
+                              value={currentComboTeamSize || ''}
+                              onChange={(e) => handleComboTeamSizeChangeInput(e.target.value)}
+                              className="w-full bg-void border border-stone-mid px-4 py-2.5 rounded text-sm text-text-primary outline-none"
+                              placeholder={`Enter number between ${min} and ${max}`}
+                            />
+                            <p className="text-[10px] text-text-ghost mt-1 font-mono">Required range: {min} to {max} members</p>
                           </div>
                         )}
                       </div>
