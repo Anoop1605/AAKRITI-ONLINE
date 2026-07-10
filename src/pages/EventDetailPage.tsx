@@ -12,8 +12,35 @@ export const EventDetailPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const event = events.find((e) => e.id === eventId);
-  const { openModal } = useRegistrationStore();
+  const { openModal, isOpen } = useRegistrationStore();
   const [isCommExpanded, setIsCommExpanded] = useState(false);
+  const [regCount, setRegCount] = useState<number | null>(null);
+  const [isLoadingRegCount, setIsLoadingRegCount] = useState(false);
+
+  useEffect(() => {
+    if (event && event.maxSeats !== undefined) {
+      setIsLoadingRegCount(true);
+      const baseApiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
+      fetch(`${baseApiUrl}/api/v1/registrations/count?category=${event.category}&eventName=${encodeURIComponent(event.name)}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch count");
+          return res.json();
+        })
+        .then((data) => {
+          if (data && typeof data.count === 'number') {
+            setRegCount(data.count);
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching registration count:", err);
+        })
+        .finally(() => {
+          setIsLoadingRegCount(false);
+        });
+    } else {
+      setRegCount(null);
+    }
+  }, [event, isOpen]);
 
   // Get time-dependent bounds for realistic visitor counts (Peak vs. Late Night)
   const getVisitorBounds = () => {
@@ -351,15 +378,27 @@ export const EventDetailPage: React.FC = () => {
           "{event.tagline}"
         </p>
 
-        {/* Breathing Signatures Indicator */}
-        <div className="detail-breathing-signatures opacity-0 flex items-center justify-center md:justify-start gap-2.5 mb-8">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 shadow-[0_0_10px_#10b981]"></span>
-          </span>
-          <span className="font-mono text-xs tracking-wider text-text-ghost uppercase">
-            <span className="text-emerald-400 font-bold">{visitorCount}</span> Breathing Signatures detected in this Realm
-          </span>
+        {/* Seats Indicator Container (Breathing Signatures removed) */}
+        <div className="detail-breathing-signatures opacity-0 flex flex-col items-center md:items-start gap-3 mb-8">
+          {event.maxSeats !== undefined && (
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500 shadow-[0_0_10px_#f59e0b]"></span>
+              </span>
+              <span className="font-mono text-xs tracking-wider text-text-ghost uppercase">
+                {regCount !== null ? (
+                  regCount >= event.maxSeats ? (
+                    <span className="text-crimson-hi font-bold">ALL SEATS FILLED ({regCount} / {event.maxSeats} Teams)</span>
+                  ) : (
+                    <span>LIMITED SEATS: <span className="text-gold font-bold">{event.maxSeats - regCount}</span> OF <span className="text-gold font-bold">{event.maxSeats}</span> SEATS REMAINING</span>
+                  )
+                ) : (
+                  <span>LIMITED SEATS: <span className="text-gold font-bold">{event.maxSeats} TEAMS ONLY</span></span>
+                )}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Stats Grid Box */}
@@ -424,12 +463,21 @@ export const EventDetailPage: React.FC = () => {
         </div>
 
         {/* Registration CTA button */}
-        <button 
-          onClick={handleRegister}
-          className="detail-cta opacity-0 w-full md:w-auto self-center md:self-start bg-crimson hover:bg-crimson-hi text-text-primary font-heading font-bold tracking-[0.2em] text-sm py-4 px-10 rounded-[2px] transition-colors cursor-pointer shadow-[0_0_20px_rgba(192,57,43,0.35)] hover:shadow-[0_0_30px_rgba(229,57,53,0.5)] border border-crimson-bloom/10"
-        >
-          REGISTER FOR THIS DISTRICT &rarr;
-        </button>
+        {event.maxSeats !== undefined && regCount !== null && regCount >= event.maxSeats ? (
+          <button 
+            disabled
+            className="detail-cta opacity-0 w-full md:w-auto self-center md:self-start bg-stone border border-gold/20 text-text-ghost font-heading font-bold tracking-[0.2em] text-sm py-4 px-10 rounded-[2px] cursor-not-allowed opacity-60 shadow-none"
+          >
+            REGISTRATION CLOSED (SEATS FILLED)
+          </button>
+        ) : (
+          <button 
+            onClick={handleRegister}
+            className="detail-cta opacity-0 w-full md:w-auto self-center md:self-start bg-crimson hover:bg-crimson-hi text-text-primary font-heading font-bold tracking-[0.2em] text-sm py-4 px-10 rounded-[2px] transition-colors cursor-pointer shadow-[0_0_20px_rgba(192,57,43,0.35)] hover:shadow-[0_0_30px_rgba(229,57,53,0.5)] border border-crimson-bloom/10"
+          >
+            REGISTER FOR THIS DISTRICT &rarr;
+          </button>
+        )}
       </div>
 
       {/* Event-Specific Floating Button (District Comm) */}

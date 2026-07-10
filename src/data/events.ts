@@ -18,6 +18,7 @@ export interface Event {
   fee: string;               // Registration fee
   contact?: string;          // Direct mobile contact for event head
   whatsappLink?: string;     // WhatsApp group link for the event
+  maxSeats?: number;         // Optional seat limit for registration
 }
 
 export const events: Event[] = [
@@ -290,7 +291,8 @@ export const events: Event[] = [
     venue: 'ROOM 207',
     time: '21ST JULY 2026, 11:00 am Onwards',
     fee: '₹295',
-    contact: 'Abhishek R: 9741094602 / Guru Prasad: 9141121214'
+    contact: 'Abhishek R: 9741094602 / Guru Prasad: 9141121214',
+    maxSeats: 12
   },
 
   // === MANAGEMENT ===
