@@ -373,6 +373,7 @@ export const RegistrationModal: React.FC = () => {
       payload.append('collegeName', data.college);
       payload.append('yearOfStudy', data.year === '2nd' ? '2' : data.year === 'Final' ? '3' : data.year === 'Other' ? '4' : '1');
       payload.append('screenshot', screenshot);
+      payload.append('amountPaid', feeAmount);
 
       if (isComboPass) {
         payload.append('category', 'COMBO');
