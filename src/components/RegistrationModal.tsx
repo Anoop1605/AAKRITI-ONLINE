@@ -61,6 +61,7 @@ interface ComboEventState {
   teamName: string;
   leaderName: string;
   leaderPhone: string;
+  leaderEmail: string;
   teamSize: number;
   memberNames: string;
 }
@@ -81,6 +82,7 @@ export const RegistrationModal: React.FC = () => {
   const [currentEventTeamName, setCurrentEventTeamName] = useState('');
   const [currentEventLeaderName, setCurrentEventLeaderName] = useState('');
   const [currentEventLeaderPhone, setCurrentEventLeaderPhone] = useState('');
+  const [currentEventLeaderEmail, setCurrentEventLeaderEmail] = useState('');
   const [currentEventMembers, setCurrentEventMembers] = useState<string[]>([]);
 
   // --- Single Event States ---
@@ -141,6 +143,7 @@ export const RegistrationModal: React.FC = () => {
       let initialTeamName = '';
       let initialLeaderName = '';
       let initialLeaderPhone = '';
+      let initialLeaderEmail = '';
 
       const existing = comboRosters.find(r => r.eventId === activeEvent.id);
       if (existing) {
@@ -148,6 +151,7 @@ export const RegistrationModal: React.FC = () => {
         initialTeamName = existing.teamName;
         initialLeaderName = existing.leaderName;
         initialLeaderPhone = existing.leaderPhone;
+        initialLeaderEmail = existing.leaderEmail || '';
         initialMembers = existing.memberNames ? existing.memberNames.split(', ') : [];
         
         const targetLen = initialSize > 1 ? initialSize - 1 : 0;
@@ -163,6 +167,7 @@ export const RegistrationModal: React.FC = () => {
       setCurrentEventTeamName(initialTeamName);
       setCurrentEventLeaderName(initialLeaderName);
       setCurrentEventLeaderPhone(initialLeaderPhone);
+      setCurrentEventLeaderEmail(initialLeaderEmail);
       setLocalError(null);
     }
   }, [currentComboIndex, selectedEventId, isOpen, isComboPass, activeEvent]);
@@ -277,6 +282,10 @@ export const RegistrationModal: React.FC = () => {
           setLocalError('Please provide a valid 10-digit Leader Mobile number and Name.');
           return;
         }
+        if (!currentEventLeaderEmail.trim() || !currentEventLeaderEmail.includes('@') || !currentEventLeaderEmail.includes('.')) {
+          setLocalError('Please provide a valid Leader Email address.');
+          return;
+        }
         if (currentEventMembers.some(m => !m.trim())) {
           setLocalError('Please fill out all missing team member fields.');
           return;
@@ -290,6 +299,7 @@ export const RegistrationModal: React.FC = () => {
           teamName: isSolo ? 'Solo' : currentEventTeamName,
           leaderName: currentEventLeaderName,
           leaderPhone: currentEventLeaderPhone,
+          leaderEmail: currentEventLeaderEmail,
           teamSize: isSolo ? 1 : currentComboTeamSize,
           memberNames: currentEventMembers.join(', ')
         });
@@ -580,6 +590,17 @@ export const RegistrationModal: React.FC = () => {
                           placeholder="10-digit number" 
                         />
                       </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-text-ghost text-xs mb-1">Leader Email Address *</label>
+                      <input 
+                        type="email"
+                        value={currentEventLeaderEmail}
+                        onChange={(e) => setCurrentEventLeaderEmail(e.target.value)}
+                        className="w-full bg-void border border-stone-mid px-4 py-2.5 rounded text-sm text-text-primary outline-none"
+                        placeholder="leader.email@example.com" 
+                      />
                     </div>
 
                     {currentEventMembers.length > 0 && (
