@@ -126,10 +126,11 @@ export const events: Event[] = [
     districtTheme: 'card-cricket', 
     tagline: '8 Overs. Infinite Glory.',
     description: 'High-octane T8 format where strategic positioning and heavy hitting rule the pitch.',
-    teamSize: '11 Players', 
+    teamSize: '11 + 3 members', 
     duration: '8 Overs per Innings', 
     icon: 'Activity',
     rules: [
+      'Max 14 players (11 active on pitch, 3 substitutes).',
       'Maximum of 2 overs per single bowler. Remaining overs shared across the team.',
       'Overs 1-2 are Mandatory Powerplay (Max 2 fielders outside 30-yard circle).',
       'Overs 3-8 allow a maximum of 5 fielders outside the circle.',
