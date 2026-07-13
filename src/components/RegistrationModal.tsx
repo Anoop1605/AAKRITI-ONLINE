@@ -743,15 +743,26 @@ export const RegistrationModal: React.FC = () => {
                   </p>
                 </div>
                 
-                {!isComboPass && activeEvent?.whatsappLink && (
+                {isComboPass ? (
                   <a 
-                    href={activeEvent.whatsappLink}
+                    href="https://chat.whatsapp.com/JDAaWAtqcKW9sUP89ZHDmh"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 px-6 py-2.5 bg-crimson hover:bg-crimson-hi text-text-primary font-heading font-semibold text-xs tracking-widest uppercase rounded inline-flex items-center gap-2"
+                    className="mt-4 px-6 py-2.5 bg-gold hover:bg-gold-bright text-void font-heading font-semibold text-xs tracking-widest uppercase rounded inline-flex items-center gap-2"
                   >
-                    Join Event WhatsApp Group
+                    Join Aakriti Community Group
                   </a>
+                ) : (
+                  activeEvent?.whatsappLink && (
+                    <a 
+                      href={activeEvent.whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 px-6 py-2.5 bg-crimson hover:bg-crimson-hi text-text-primary font-heading font-semibold text-xs tracking-widest uppercase rounded inline-flex items-center gap-2"
+                    >
+                      Join Event WhatsApp Group
+                    </a>
+                  )
                 )}
 
                 <button type="button" onClick={closeModal} className="text-text-ghost hover:text-gold text-xs uppercase tracking-widest font-semibold transition-colors mt-2">
