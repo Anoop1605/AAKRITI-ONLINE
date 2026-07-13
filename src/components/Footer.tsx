@@ -111,7 +111,7 @@ export const Footer: React.FC = () => {
             &copy; 2026 {COLLEGE_NAME}. All Rights Reserved.
           </p>
           <p className="font-body text-[15px] text-text-ghost tracking-widest uppercase">
-            Forged by The Tech Council <span className="text-gold mx-2">|</span> Developed by <span className="text-gold font-bold tracking-widest drop-shadow-[0_0_12px_rgba(212,160,84,0.75)]">ANOOP S S (MSRIT)</span>
+            Forged by The Tech Council <span className="text-gold mx-2">|</span> Developed by <span className="text-gold font-bold tracking-widest drop-shadow-[0_0_12px_rgba(212,160,84,0.75)]">ANOOP S S</span>
           </p>
         </div>
 
