@@ -20,7 +20,7 @@ const getTeamDetails = (eventId: string | null) => {
   
   // 1. Check for Solo / Singles / Doubles
   if (size.includes('singles / doubles') || size.includes('singles/doubles')) return { isSolo: false, min: 1, max: 2 };
-  if (size.includes('solo') || size === '1v1' || size === 'singles') return { isSolo: true, min: 1, max: 1 };
+  if (size.includes('solo') || size === '1v1' || size.includes('singles')) return { isSolo: true, min: 1, max: 1 };
   if (size.includes('doubles')) return { isSolo: false, min: 2, max: 2 };
 
   // 2. Check for ranges first (to avoid substring matching on word match)
@@ -42,6 +42,63 @@ const getTeamDetails = (eventId: string | null) => {
   if (wordMatch) return { isSolo: false, min: parseInt(wordMatch[1]), max: parseInt(wordMatch[1]) };
 
   return { isSolo: false, min: 2, max: 15 };
+};
+
+// Canvas-based image compression helper
+const compressImage = (file: File, maxWidth = 1024, maxHeight = 1024, quality = 0.7): Promise<File> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(file);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            } else {
+              resolve(file);
+            }
+          },
+          'image/jpeg',
+          quality
+        );
+      };
+      img.onerror = () => resolve(file);
+    };
+    reader.onerror = () => resolve(file);
+  });
 };
 
 const registrationSchema = z.object({
@@ -749,7 +806,17 @@ export const RegistrationModal: React.FC = () => {
                     type="file" 
                     accept="image/*"
                     required
-                    onChange={(e) => { if (e.target.files && e.target.files.length > 0) setScreenshot(e.target.files[0]); }}
+                    onChange={async (e) => { 
+                      if (e.target.files && e.target.files.length > 0) {
+                        const originalFile = e.target.files[0];
+                        try {
+                          const compressed = await compressImage(originalFile);
+                          setScreenshot(compressed);
+                        } catch (err) {
+                          setScreenshot(originalFile);
+                        }
+                      } 
+                    }}
                     className="w-full bg-void border border-stone-mid text-text-primary file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-gold file:text-void cursor-pointer rounded text-sm p-2" 
                   />
                   {submitError && <p className="text-crimson text-xs mt-2">{submitError}</p>}

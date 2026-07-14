@@ -78,7 +78,7 @@ export const events: Event[] = [
     districtTheme: 'card-shadow',
     tagline: 'Precision. Silence. Strike.',
     description: 'In the quiet chamber, a single calculated flick decides who claims the board.',
-    teamSize: 'Singles / Doubles', 
+    teamSize: 'Singles', 
     duration: 'Points Based', 
     icon: 'Target',
     rules: [

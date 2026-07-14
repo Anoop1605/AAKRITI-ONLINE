@@ -120,7 +120,6 @@ export const EventDetailPage: React.FC = () => {
         return (
           <>
             <div className="detail-candle-glow absolute w-[250px] h-[250px] rounded-full pointer-events-none z-10" style={{ bottom: '20%', left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(circle, rgba(139,94,26,0.22) 0%, transparent 70%)' }} />
-            <div className="detail-candle-flame absolute w-[8px] h-[22px] rounded-t-full pointer-events-none z-10 origin-bottom" style={{ bottom: 'calc(20% + 110px)', left: 'calc(50% - 4px)', background: 'linear-gradient(180deg, #F0C070, #C0392B)' }} />
           </>
         );
       case 'card-thunder':
