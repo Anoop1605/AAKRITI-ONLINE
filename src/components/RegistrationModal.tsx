@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { X, CheckCircle, ChevronRight } from 'lucide-react';
+import { X, CheckCircle, ChevronRight, MessageCircle } from 'lucide-react';
 import { useRegistrationStore } from '../store/registrationStore';
 import { events } from '../data/events';
 import { gsap, ScrollTrigger } from '../lib/gsap';
@@ -72,6 +72,8 @@ export const RegistrationModal: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   
   const isComboPass = selectedEventId === 'cm-pass';
+  const isLocalhost = typeof window !== 'undefined' && 
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
   // --- Combo Pass States ---
   const [currentComboIndex, setCurrentComboIndex] = useState<number>(0);
@@ -432,10 +434,40 @@ export const RegistrationModal: React.FC = () => {
       <div ref={modalRef} className="relative w-full md:max-w-[580px] max-h-[90vh] md:max-h-[85vh] bg-stone-mid border-t md:border border-gold/20 rounded-t-xl md:rounded-[3px] shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
         <div className="relative z-10 border-b border-gold/10 px-6 py-4 flex items-center justify-between bg-stone shrink-0">
-          <div>
-            <h2 className="font-display font-semibold text-gold tracking-widest uppercase text-sm md:text-base">Enter the Registry</h2>
-            {isComboPass && step === 2 && (
-              <p className="text-[10px] text-crimson font-mono tracking-wider mt-0.5">CONTI-PASS BUNDLE UNLOCKED</p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <div>
+              <h2 className="font-display font-semibold text-gold tracking-widest uppercase text-sm md:text-base">Enter the Registry</h2>
+              {isComboPass && step === 2 && (
+                <p className="text-[10px] text-crimson font-mono tracking-wider mt-0.5">CONTI-PASS BUNDLE UNLOCKED</p>
+              )}
+            </div>
+            {isLocalhost && (
+              <div className="flex items-center gap-2 border border-dashed border-gold/30 px-2 py-0.5 rounded bg-void/50 text-[10px] font-mono text-gold shrink-0">
+                <span className="text-text-ghost uppercase font-bold">DEV:</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!selectedEventId) {
+                      setValue('selectedEventId', 'sp-01');
+                    }
+                    setStep(4);
+                  }}
+                  className="hover:underline text-gold uppercase"
+                >
+                  Success
+                </button>
+                <span>|</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setValue('selectedEventId', isComboPass ? 'sp-01' : 'cm-pass');
+                    setStep(4);
+                  }}
+                  className="hover:underline text-gold uppercase"
+                >
+                  Toggle Combo
+                </button>
+              </div>
             )}
           </div>
           <button onClick={closeModal} className="text-text-ghost hover:text-crimson transition-colors"><X size={24} /></button>
@@ -744,24 +776,38 @@ export const RegistrationModal: React.FC = () => {
                 </div>
                 
                 {isComboPass ? (
-                  <a 
-                    href="https://chat.whatsapp.com/JDAaWAtqcKW9sUP89ZHDmh"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 px-6 py-2.5 bg-gold hover:bg-gold-bright text-void font-heading font-semibold text-xs tracking-widest uppercase rounded inline-flex items-center gap-2"
-                  >
-                    Join Aakriti Community Group
-                  </a>
-                ) : (
-                  activeEvent?.whatsappLink && (
+                  <div className="flex flex-col items-center gap-2">
                     <a 
-                      href={activeEvent.whatsappLink}
+                      href="https://chat.whatsapp.com/JDAaWAtqcKW9sUP89ZHDmh"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-4 px-6 py-2.5 bg-crimson hover:bg-crimson-hi text-text-primary font-heading font-semibold text-xs tracking-widest uppercase rounded inline-flex items-center gap-2"
+                      className="mt-4 px-6 py-2.5 bg-gold hover:bg-gold-bright text-void font-heading font-semibold text-xs tracking-widest uppercase rounded inline-flex items-center gap-2"
                     >
-                      Join Event WhatsApp Group
+                      Join Aakriti Community Group
                     </a>
+                    <p className="text-text-ghost text-[11px] max-w-xs mx-auto italic mt-1 leading-relaxed flex items-center justify-center gap-1 flex-wrap">
+                      <span>* Note: The team members can join the group by using the  </span>
+                      <MessageCircle className="w-3.5 h-3.5 text-gold inline" />
+                      <span>symbol to get the latest updates.</span>
+                    </p>
+                  </div>
+                ) : (
+                  activeEvent?.whatsappLink && (
+                    <div className="flex flex-col items-center gap-2">
+                      <a 
+                        href={activeEvent.whatsappLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 px-6 py-2.5 bg-crimson hover:bg-crimson-hi text-text-primary font-heading font-semibold text-xs tracking-widest uppercase rounded inline-flex items-center gap-2"
+                      >
+                        Join Event WhatsApp Group
+                      </a>
+                      <p className="text-text-ghost text-[11px] max-w-xs mx-auto italic mt-1 leading-relaxed flex items-center justify-center gap-1 flex-wrap">
+                        <span>* Note: The team members can join the group by using the</span>
+                        <MessageCircle className="w-3.5 h-3.5 text-gold inline" />
+                        <span>symbol to get the latest updates.</span>
+                      </p>
+                    </div>
                   )
                 )}
 
