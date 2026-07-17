@@ -22,6 +22,7 @@ import { EventDetailPage } from './pages/EventDetailPage';
 import { RegistrationModal } from './components/RegistrationModal';
 import { Analytics } from '@vercel/analytics/react';
 import GlobalCommsWidget from './components/GlobalCommsWidget';
+import { WonderlaNoticeModal } from './components/WonderlaNoticeModal';
 
 function AppContent() {
   const location = useLocation();
@@ -57,6 +58,7 @@ function AppContent() {
 
       <RegistrationModal />
       <GlobalCommsWidget />
+      <WonderlaNoticeModal />
     </>
   );
 }

@@ -21,11 +21,43 @@ export const IntroOverlay: React.FC = () => {
   useEffect(() => {
     if (!shouldRender || done) return;
 
-    // Force scroll to top and lock body
+    // Force scroll to top and lock body/html elements to fixed 100% viewport
     window.scrollTo(0, 0);
+    
+    const originalBodyStyle = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left,
+      width: document.body.style.width,
+      height: document.body.style.height,
+      overflow: document.body.style.overflow,
+    };
+    
+    const originalHtmlStyle = {
+      position: document.documentElement.style.position,
+      height: document.documentElement.style.height,
+      overflow: document.documentElement.style.overflow,
+    };
+
+    document.body.style.position = 'fixed';
+    document.body.style.top = '0';
+    document.body.style.left = '0';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
     document.body.style.overflow = 'hidden';
+
+    document.documentElement.style.position = 'fixed';
+    document.documentElement.style.height = '100%';
     document.documentElement.style.overflow = 'hidden';
+
     ScrollTrigger.normalizeScroll(false);
+
+    // Block scroll event by resetting scrollTo(0,0)
+    const blockScroll = () => {
+      if (window.scrollY !== 0 || window.scrollX !== 0) {
+        window.scrollTo(0, 0);
+      }
+    };
 
     // Block wheel events from reaching the page during intro
     const blockWheel = (e: WheelEvent) => {
@@ -42,17 +74,28 @@ export const IntroOverlay: React.FC = () => {
       }
     };
 
-    window.addEventListener('wheel', blockWheel, { passive: false });
-    window.addEventListener('touchmove', blockTouch, { passive: false });
-    window.addEventListener('keydown', blockKeyScroll, { passive: false });
+    window.addEventListener('scroll', blockScroll, { capture: true });
+    window.addEventListener('wheel', blockWheel, { passive: false, capture: true });
+    window.addEventListener('touchmove', blockTouch, { passive: false, capture: true });
+    window.addEventListener('keydown', blockKeyScroll, { passive: false, capture: true });
 
     return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+      document.body.style.position = originalBodyStyle.position;
+      document.body.style.top = originalBodyStyle.top;
+      document.body.style.left = originalBodyStyle.left;
+      document.body.style.width = originalBodyStyle.width;
+      document.body.style.height = originalBodyStyle.height;
+      document.body.style.overflow = originalBodyStyle.overflow;
+
+      document.documentElement.style.position = originalHtmlStyle.position;
+      document.documentElement.style.height = originalHtmlStyle.height;
+      document.documentElement.style.overflow = originalHtmlStyle.overflow;
+
       ScrollTrigger.normalizeScroll(true);
-      window.removeEventListener('wheel', blockWheel);
-      window.removeEventListener('touchmove', blockTouch);
-      window.removeEventListener('keydown', blockKeyScroll);
+      window.removeEventListener('scroll', blockScroll, { capture: true });
+      window.removeEventListener('wheel', blockWheel, { capture: true });
+      window.removeEventListener('touchmove', blockTouch, { capture: true });
+      window.removeEventListener('keydown', blockKeyScroll, { capture: true });
     };
   }, [shouldRender, done]);
 
@@ -307,14 +350,20 @@ export const IntroOverlay: React.FC = () => {
         animId = requestAnimationFrame(frame);
       } else {
         isFinished = true;
-        setDone(true);
         sessionStorage.setItem('introPlayed', 'true');
         if (root) {
           root.style.transition = 'opacity 1s ease-in-out';
           root.style.opacity = '0';
+          fadeTimeout = setTimeout(() => {
+            setDone(true);
+          }, 1000);
+        } else {
+          setDone(true);
         }
       }
     }
+
+    let fadeTimeout: ReturnType<typeof setTimeout>;
 
     setTimeout(makeCracks, 50);
     animId = requestAnimationFrame(frame);
@@ -322,6 +371,9 @@ export const IntroOverlay: React.FC = () => {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
+      if (fadeTimeout) {
+        clearTimeout(fadeTimeout);
+      }
     };
   }, []);
 

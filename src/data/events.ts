@@ -485,7 +485,7 @@ const whatsappLinksMap: Record<string, string> = {
   'mg-02': 'https://chat.whatsapp.com/BevIIukrLIW9409FsuhZcS', // Ads Creation
   'mg-03': 'https://chat.whatsapp.com/ELGIgA2VJZc5HBjZeS9uXb', // Best Manager
   'mg-04': 'https://chat.whatsapp.com/BaoGk3TzwHiI9XiU15Qmdp', // Finance
-  'mg-05': 'https://chat.whatsapp.com/HfR3NTcyTvR3R4DUGYoTSz', // Business Analytics
+  'mg-05': 'https://chat.whatsapp.com/CignKLDllI97b6rH6dOXNt', // Business Analytics
   'mg-06': 'https://chat.whatsapp.com/C3QBFht3Um0BPxr7ZLaRet', // Trade Barter
 };
 
