@@ -44,7 +44,7 @@ function AppContent() {
 
     const pingBackend = () => {
       lastPingTime = Date.now();
-      fetch(`${baseApiUrl}/health`)
+      fetch(`${baseApiUrl}/`)
         .then(() => console.log('Backend wake-up/keep-alive ping successful.'))
         .catch((err) => console.warn('Backend wake-up/keep-alive ping failed:', err));
     };
