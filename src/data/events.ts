@@ -95,30 +95,6 @@ export const events: Event[] = [
     contact: 'Manoj Gowda DM: 8660229528'
   },
   {
-    id: 'sp-07', 
-    name: 'Tug of War', 
-    category: 'sports',
-    districtName: 'Unbreakable Grip District',
-    districtTheme: 'card-tug', 
-    tagline: 'Hold Ground. Break Spirits.',
-    description: 'Eight pullers acting as one wall of absolute resistance. Do not break connection.',
-    teamSize: '8 Pullers', 
-    duration: 'Best of 3 Pulls', 
-    icon: 'Swords',
-    rules: [
-      '8 active pullers per team. Max weight strictly enforced (e.g. Men: 640kg max).',
-      'Knockout brackets format, best of 3 pulls total.',
-      'A pull is won when opponent’s closest rope marker crosses the center line on the ground.',
-      'No Anchoring: Rope cannot be wrapped/tied around body (except safety rules for the end anchor).',
-      'No Sitting/Locking: Feet must remain flat. Sitting or locking limbs to stall is a foul.',
-      'Proper footwear required (no spiked boots or bare feet unless specified).'
-    ],
-    venue: 'College Ground',
-    time: '20/07/2026, 12:00 PM',
-    fee: '₹826 per team',
-    contact: 'Rakesh Gowda: 9035766332'
-  },
-  {
     id: 'sp-08', 
     name: 'Cricket', 
     category: 'sports',
@@ -449,7 +425,7 @@ export const categories = {
   sports: {
     title: 'The Breathing Districts',
     subtitle: 'Where Strength Meets Honour',
-    count: 5,
+    count: 4,
     theme: 'stone',
     color: '#D4A054'
   },
@@ -473,7 +449,6 @@ const whatsappLinksMap: Record<string, string> = {
   'sp-01': 'https://chat.whatsapp.com/HP1h5FBiMnHD7kx9duUXE6', // Throwball
   'sp-02': 'https://chat.whatsapp.com/CYP5qL8TSsMDL7ldgu1SeU', // Volleyball
   'sp-03': 'https://chat.whatsapp.com/E74vv2vD0bO1MPXhDYgtMc', // Carrom
-  'sp-07': 'https://chat.whatsapp.com/IFAgqcDzHUm8wtff80c2Uz', // Tug of War
   'sp-08': 'https://chat.whatsapp.com/KE8NtYAznCt89g0u9Fw5FC', // Cricket
   'cu-01': 'https://chat.whatsapp.com/EMtGH7BS1kMGWfACYxJHHi', // Fashion Show
   'cu-02': 'https://chat.whatsapp.com/FLuxaK81JqmFreKyufKsGk', // Duet Dance
